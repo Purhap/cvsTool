@@ -26,7 +26,6 @@ namespace cvsTool.View
         private ProgressBar progressBar1;
         private PersonControllor _controllor;
 
-       // delegate void AsynUpdateUI(int step);
         public PersonControllor Controllor
         {
             get { return _controllor; }
