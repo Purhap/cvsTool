@@ -8,6 +8,7 @@ using fxcore2;
 using System.Configuration;
 using System.Threading;
 
+
 namespace cvsTool.Controllor
 {
     public class PersonControllor
@@ -17,8 +18,8 @@ namespace cvsTool.Controllor
         public Person Model;
         private Thread getHistoryThread;
 
-        public delegate void UpdateUI(int step);
-        public UpdateUI UpdateUIDelegate;
+        public delegate void UpdateUIDelegate(int value);
+        public UpdateUIDelegate updateProcessDelegate;
 
         public delegate void AccomplishTask();//声明一个在完成任务时通知主线程的委托
         public AccomplishTask TaskCallBack;
@@ -39,11 +40,13 @@ namespace cvsTool.Controllor
         }
         public void UpdateProcess()
         {
+            //View.Invoke(UpdateProgress);
+            //
            //this.Invoke
-                 this.Invoke((EventHandler)delegate
-                 {
-                     View.updateProcess(1);
-                 });
+                // this.Invoke((EventHandler)delegate
+               //  {
+               //      View.updateProcess(1);
+              //   });
         }
         private void UpdateToDataBase(Person p)
         {
@@ -147,7 +150,7 @@ namespace cvsTool.Controllor
         /// <param name="dtFrom"></param>
         /// <param name="dtTo"></param>
         /// <param name="responseListener"></param>
-        public static void GetHistoryPrices(O2GSession session, string sInstrument, string sTimeframe, DateTime dtFrom, DateTime dtTo, ResponseListener responseListener)
+        public void GetHistoryPrices(O2GSession session, string sInstrument, string sTimeframe, DateTime dtFrom, DateTime dtTo, ResponseListener responseListener)
         {
             O2GRequestFactory factory = session.getRequestFactory();
             O2GTimeframe timeframe = factory.Timeframes[sTimeframe];
@@ -157,6 +160,7 @@ namespace cvsTool.Controllor
             }
             O2GRequest request = factory.createMarketDataSnapshotRequestInstrument(sInstrument, timeframe, 300);
             DateTime dtFirst = dtTo;
+            int processTick = 0;
             do // cause there is limit for returned candles amount
             {
                 factory.fillMarketDataSnapshotRequestTime(request, dtFrom, dtFirst, false);
@@ -192,7 +196,7 @@ namespace cvsTool.Controllor
                         }
                     }
                     PrintPrices(session, response);
-                    
+                    updateProcessDelegate(processTick++);
                 }
                 else
                 {

@@ -25,9 +25,8 @@ namespace cvsTool.View
         private Button button2;
         private ProgressBar progressBar1;
         private PersonControllor _controllor;
-        public PersonControllor.UpdateUI updateProcess;
 
-        delegate void AsynUpdateUI(int step);
+       // delegate void AsynUpdateUI(int step);
         public PersonControllor Controllor
         {
             get { return _controllor; }
@@ -115,7 +114,8 @@ namespace cvsTool.View
             this.textBox1.Text = "2";
             this.textBox2.Text = "jacky";
             this.button1.Enabled = false;
-            updateProcess = new cvsTool.Controllor.UpdateUI(UpdataUIStatus);
+            // updateProcess = new cvsTool.Controllor.UpdateUI(UpdataUIStatus);
+            Controllor.updateProcessDelegate = new Controllor.PersonControllor.UpdateUIDelegate(updateProcessBar);
             Controllor.startGetHistroyPrice();
             
         }
@@ -128,18 +128,15 @@ namespace cvsTool.View
             Controllor.stopGetHistroyPrice();
         }
 
-        private void UpdataUIStatus(int step)
+        private void updateProcessBar(int value)
         {
-            if (InvokeRequired)
+            if (this.progressBar1.InvokeRequired)
             {
-                this.Invoke(new AsynUpdateUI(delegate (int s)
-                {
-                    this.progressBar1.Value += s;                  
-                }), step);
-            }
+                this.Invoke(Controllor.updateProcessDelegate, new object[] { value });
+            }     
             else
             {
-                this.progressBar1.Value += step;               
+                this.progressBar1.Value += value;               
             }
         }
     }
