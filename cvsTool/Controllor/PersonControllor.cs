@@ -18,6 +18,7 @@ namespace cvsTool.Controllor
         public PersonForm View;
 
         public Person Model;
+        public DataTable InstrumentDT;
         private Thread getHistoryThread;
 
         public delegate void UpdateUIDelegate(int value);
@@ -33,6 +34,8 @@ namespace cvsTool.Controllor
             this.View = view;
 
             this.View.Controllor = this;
+
+            this.InstrumentDT = Model.csv.dataTable;
                         
         }
 
@@ -68,7 +71,7 @@ namespace cvsTool.Controllor
             }
         }
 
-        public void WritePriceToFile(O2GSession session, O2GResponse response, string sInstrument)
+        public void storeHistoryPriceToDataTable(O2GSession session, O2GResponse response, string sInstrument)
         {
             // Console.WriteLine("Request with RequestID={0} is completed:", response.RequestID);
             
@@ -79,33 +82,27 @@ namespace cvsTool.Controllor
             if (factory != null)
             {
                 O2GMarketDataSnapshotResponseReader reader = factory.createMarketDataSnapshotReader(response);
-                DataTable dt = new DataTable();
-                dt.Columns.Add("DateTime", System.Type.GetType("System.String"));
-                dt.Columns.Add("BidOpen", System.Type.GetType("System.String"));
-                dt.Columns.Add("BidHigh", System.Type.GetType("System.String"));
-                dt.Columns.Add("BidLow", System.Type.GetType("System.String"));
-                dt.Columns.Add("BidClose", System.Type.GetType("System.String"));
-                dt.Columns.Add("AskOpen", System.Type.GetType("System.String"));
-                dt.Columns.Add("AskHigh", System.Type.GetType("System.String"));
-                dt.Columns.Add("AskLow", System.Type.GetType("System.String"));
-                dt.Columns.Add("AskClose", System.Type.GetType("System.String"));
-                dt.Columns.Add("Volume", System.Type.GetType("System.String"));
+                              
                 for (int ii = reader.Count - 1; ii >= 0; ii--)
                 {
                     if (reader.isBar)
                     {
-                        dt.Rows.Add(reader.getDate(ii), reader.getBidOpen(ii), reader.getBidHigh(ii), reader.getBidLow(ii), reader.getBidClose(ii),
+                        InstrumentDT.Rows.Add(reader.getDate(ii), reader.getBidOpen(ii), reader.getBidHigh(ii), reader.getBidLow(ii), reader.getBidClose(ii),
                                 reader.getAskOpen(ii), reader.getAskHigh(ii), reader.getAskLow(ii), reader.getAskClose(ii), reader.getVolume(ii));
                     }
                     else
                     {
-                        dt.Rows.Add(reader.getDate(ii), reader.getBidClose(ii), reader.getAskClose(ii));
+                        InstrumentDT.Rows.Add(reader.getDate(ii), reader.getBidClose(ii), reader.getAskClose(ii));
                     }
-                }
-                string fileName = sInstrument.Replace("/", "2");
-                Csv.SaveCSV(dt, fileName);
-                
+                }               
             }
+        }
+
+        private void writeHistoryPriceToFile( string sInstrument)
+        {
+            string fileName = sInstrument.Replace("/", "2");
+            fileName += ".csv";
+            Csv.SaveCSV(InstrumentDT, fileName);
         }
         /// <summary>
         /// Print process name and sample parameters
@@ -156,7 +153,7 @@ namespace cvsTool.Controllor
                     GetHistoryPrices(session, sampleParams.Instrument, sampleParams.Timeframe, sampleParams.DateFrom, sampleParams.DateTo, responseListener);
                    // Console.WriteLine("Done!");
                     updateLogDelegate("Done!");
-
+                    writeHistoryPriceToFile(sampleParams.Instrument);
                     statusListener.Reset();
                     session.logout();
                     statusListener.WaitEvents();
@@ -233,8 +230,8 @@ namespace cvsTool.Controllor
                             break;
                         }
                     }
-                   // PrintPrices(session, response);
-                    WritePriceToFile(session, response, sInstrument);
+                    // PrintPrices(session, response);
+                    storeHistoryPriceToDataTable(session, response, sInstrument);
                     // DateTime.Subtraction(dtTo, dtFirst)/ Subtraction
                     long percent = (dtTo.Ticks - dtFirst.Ticks) * 100 / (dtTo.Ticks - dtFrom.Ticks);
                     

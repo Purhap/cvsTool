@@ -20,7 +20,12 @@ namespace cvsTool.Model
             get { return _name; }
             set { _id = value; OnPropertyChanged("Name"); }
         }
+        public Csv csv;
 
+        public Person()
+        {
+            csv = new Csv();
+        }
         #region INotifyPropertyChanged 成员
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -7,11 +7,26 @@ using System.IO;
 
 namespace cvsTool.Model
 {
-    public static class Csv
+    public class Csv
     {
-      
-        public static Boolean SaveCSV(DataTable dt, string fullFileName)
+        public DataTable dataTable;
+        string[] columnsNames = new string[]{"DateTime","BidOpen","BidHigh","BidLow","BidClose","AskOpen","AskHigh","AskLow","AskClose","Volume"};
+        public Csv()
         {
+            dataTable = new DataTable();
+            foreach(string s in columnsNames)
+            {
+                dataTable.Columns.Add(s, System.Type.GetType("System.String"));
+            }
+
+        }
+
+        public void AppendToDataTable(DataTable dt)
+        {
+
+        }
+        public static Boolean SaveCSV(DataTable dt, string fullFileName)
+        {           
             Boolean r = false;
             FileStream fs = new FileStream(fullFileName, System.IO.FileMode.Create, System.IO.FileAccess.Write);
             StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.Default);
