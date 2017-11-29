@@ -184,7 +184,10 @@ namespace cvsTool.Controllor
                         }
                     }
                     PrintPrices(session, response);
-                    updateProcessDelegate(processTick++);
+                   // DateTime.Subtraction(dtTo, dtFirst)/ Subtraction
+                    long percent = (dtTo.Ticks - dtFirst.Ticks) * 100 / (dtTo.Ticks - dtFrom.Ticks);
+                    processTick = (int)percent;
+                    updateProcessDelegate(processTick);
                 }
                 else
                 {

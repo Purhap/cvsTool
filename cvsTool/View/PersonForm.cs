@@ -135,7 +135,7 @@ namespace cvsTool.View
             }     
             else
             {
-                this.progressBar1.Value += value;               
+                this.progressBar1.Value = value;               
             }
         }
     }

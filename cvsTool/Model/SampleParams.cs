@@ -52,7 +52,7 @@ namespace cvsTool.Model
         /// <param name="args"></param>
         public SampleParams(NameValueCollection args)
         {
-            string sDateFormat = "MM.dd.yyyy HH:mm:ss";
+            string sDateFormat = "MM/dd/yyyy/HH:mm:ss";
             mInstrument = GetRequiredArgument(args, "Instrument");
             mTimeframe = GetRequiredArgument(args, "Timeframe");
 
