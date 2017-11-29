@@ -21,9 +21,6 @@ namespace cvsTool.Controllor
         public delegate void UpdateUIDelegate(int value);
         public UpdateUIDelegate updateProcessDelegate;
 
-        public delegate void AccomplishTask();//声明一个在完成任务时通知主线程的委托
-        public AccomplishTask TaskCallBack;
-
         public PersonControllor(PersonForm view)
         {
             Model = new Person() { ID = "1", Name = "DongTian" };
@@ -38,16 +35,7 @@ namespace cvsTool.Controllor
         {
             UpdateToDataBase(Model);
         }
-        public void UpdateProcess()
-        {
-            //View.Invoke(UpdateProgress);
-            //
-           //this.Invoke
-                // this.Invoke((EventHandler)delegate
-               //  {
-               //      View.updateProcess(1);
-              //   });
-        }
+
         private void UpdateToDataBase(Person p)
         {
             System.Windows.Forms.MessageBox.Show("ID:" + p.ID + "Name:" + p.Name);
@@ -196,7 +184,10 @@ namespace cvsTool.Controllor
                         }
                     }
                     PrintPrices(session, response);
-                    updateProcessDelegate(processTick++);
+                   // DateTime.Subtraction(dtTo, dtFirst)/ Subtraction
+                    long percent = (dtTo.Ticks - dtFirst.Ticks) * 100 / (dtTo.Ticks - dtFrom.Ticks);
+                    processTick = (int)percent;
+                    updateProcessDelegate(processTick);
                 }
                 else
                 {
