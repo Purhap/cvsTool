@@ -24,6 +24,8 @@ namespace cvsTool.View
         private Button button1;
         private Button button2;
         private ProgressBar progressBar1;
+        private RichTextBox logTextBox;
+        private Label label1;
         private PersonControllor _controllor;
 
         public PersonControllor Controllor
@@ -51,18 +53,20 @@ namespace cvsTool.View
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.logTextBox = new System.Windows.Forms.RichTextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(96, 58);
+            this.textBox1.Location = new System.Drawing.Point(109, 89);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(100, 21);
             this.textBox1.TabIndex = 0;
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(116, 121);
+            this.textBox2.Location = new System.Drawing.Point(109, 123);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(100, 21);
             this.textBox2.TabIndex = 1;
@@ -71,9 +75,9 @@ namespace cvsTool.View
             // 
             this.button1.Location = new System.Drawing.Point(381, 45);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(164, 23);
             this.button1.TabIndex = 2;
-            this.button1.Text = "button1";
+            this.button1.Text = "Get History Prices";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
@@ -89,14 +93,33 @@ namespace cvsTool.View
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(260, 192);
+            this.progressBar1.Location = new System.Drawing.Point(109, 45);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(160, 23);
             this.progressBar1.TabIndex = 4;
             // 
+            // logTextBox
+            // 
+            this.logTextBox.Location = new System.Drawing.Point(109, 162);
+            this.logTextBox.Name = "logTextBox";
+            this.logTextBox.Size = new System.Drawing.Size(436, 185);
+            this.logTextBox.TabIndex = 5;
+            this.logTextBox.Text = "";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(275, 50);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(17, 12);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "0%";
+            // 
             // PersonForm
             // 
-            this.ClientSize = new System.Drawing.Size(502, 255);
+            this.ClientSize = new System.Drawing.Size(704, 371);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.logTextBox);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.button1);
@@ -113,8 +136,9 @@ namespace cvsTool.View
             this.textBox1.Text = "2";
             this.textBox2.Text = "jacky";
             this.button1.Enabled = false;
-            // updateProcess = new cvsTool.Controllor.UpdateUI(UpdataUIStatus);
+
             Controllor.updateProcessDelegate = new Controllor.PersonControllor.UpdateUIDelegate(updateProcessBar);
+            Controllor.updateLogDelegate = new Controllor.PersonControllor.UpdateLogDelegate(updateLogTextBox);
             Controllor.startGetHistroyPrice();
             
         }
@@ -135,7 +159,22 @@ namespace cvsTool.View
             }     
             else
             {
-                this.progressBar1.Value = value;               
+                this.progressBar1.Value = value;
+                this.label1.Text = string.Format("{0}%", value.ToString());           
+            }
+        }
+
+        private void updateLogTextBox(string value)
+        {
+            if (this.logTextBox.InvokeRequired)
+            {
+                this.Invoke(Controllor.updateLogDelegate, new object[] { value });
+            }
+            else
+            {
+                this.logTextBox.Text += value;
+                this.logTextBox.Select(this.logTextBox.TextLength, 0);//光标定位到文本最后
+                this.logTextBox.ScrollToCaret();
             }
         }
     }
