@@ -13,9 +13,12 @@ namespace cvsTool.View
   
     public partial class PersonForm : Form
    {
+        public Chart chartForm;
+        
         public PersonForm()
         {
             InitializeComponent();
+           
 
         }
 
@@ -87,7 +90,7 @@ namespace cvsTool.View
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 3;
-            this.button2.Text = "button2";
+            this.button2.Text = "Open Chart";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
@@ -117,7 +120,7 @@ namespace cvsTool.View
             // 
             // PersonForm
             // 
-            this.ClientSize = new System.Drawing.Size(704, 371);
+            this.ClientSize = new System.Drawing.Size(951, 371);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.logTextBox);
             this.Controls.Add(this.progressBar1);
@@ -145,10 +148,9 @@ namespace cvsTool.View
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Controllor.Model.ID = "2";
-            Controllor.Model.Name = "jacky";
-
-            Controllor.stopGetHistroyPrice();
+            chartForm = new Chart(this, _controllor);
+            chartForm.Show();
+            
         }
 
         private void updateProcessBar(int value)

@@ -24,7 +24,7 @@ namespace cvsTool.Model
 
         public Person()
         {
-            csv = new Csv();
+            csv = new Csv(_name);
         }
         #region INotifyPropertyChanged 成员
 

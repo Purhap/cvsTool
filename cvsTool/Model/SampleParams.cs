@@ -10,6 +10,7 @@ namespace cvsTool.Model
 {
     public class SampleParams : Params
     {
+        public string sDateFormat = "MM/dd/yyyy/HH:mm:ss";
         public string Instrument
         {
             get

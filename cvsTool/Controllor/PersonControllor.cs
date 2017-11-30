@@ -29,7 +29,7 @@ namespace cvsTool.Controllor
 
         public PersonControllor(PersonForm view)
         {
-            Model = new Person() { ID = "1", Name = "DongTian" };
+            Model = new Person() { ID = "1", Name = "None" };
             
             this.View = view;
 
@@ -42,6 +42,11 @@ namespace cvsTool.Controllor
         public void UpdatePerson()
         {
             UpdateToDataBase(Model);
+        }
+        public void updateNames(string argName)
+        {
+            Model.Name = argName;
+            Model.csv.name = argName;            
         }
 
         private void UpdateToDataBase(Person p)
@@ -72,9 +77,7 @@ namespace cvsTool.Controllor
         }
 
         public void storeHistoryPriceToDataTable(O2GSession session, O2GResponse response, string sInstrument)
-        {
-            // Console.WriteLine("Request with RequestID={0} is completed:", response.RequestID);
-            
+        {         
             string ss = string.Format("Request with RequestID={0} is completed:", response.RequestID);
             updateLogDelegate(ss);
 
@@ -101,7 +104,7 @@ namespace cvsTool.Controllor
         private void writeHistoryPriceToFile( string sInstrument)
         {
             string fileName = sInstrument.Replace("/", "2");
-            fileName += ".csv";
+            fileName += ".csv";            
             Csv.SaveCSV(InstrumentDT, fileName);
         }
         /// <summary>
@@ -154,6 +157,7 @@ namespace cvsTool.Controllor
                    // Console.WriteLine("Done!");
                     updateLogDelegate("Done!");
                     writeHistoryPriceToFile(sampleParams.Instrument);
+                    updateNames(sampleParams.Instrument);
                     statusListener.Reset();
                     session.logout();
                     statusListener.WaitEvents();
