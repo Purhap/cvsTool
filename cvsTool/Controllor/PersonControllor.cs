@@ -20,8 +20,9 @@ namespace cvsTool.Controllor
         public Person Model;
         public DataTable InstrumentDT;
         private Thread getHistoryThread;
+        private Thread simulateThread;
 
-        public delegate void UpdateUIDelegate(int value);
+        public delegate void UpdateUIDelegate(int value, int count);
         public UpdateUIDelegate updateProcessDelegate;
 
         public delegate void UpdateLogDelegate(string value);
@@ -35,7 +36,7 @@ namespace cvsTool.Controllor
 
             this.View.Controllor = this;
 
-            this.InstrumentDT = Model.csv.dataTable;
+            this.InstrumentDT = Model.Csv.dataTable;
                         
         }
 
@@ -46,7 +47,7 @@ namespace cvsTool.Controllor
         public void updateNames(string argName)
         {
             Model.Name = argName;
-            Model.csv.name = argName;            
+            Model.Csv.name = argName;            
         }
 
         private void UpdateToDataBase(Person p)
@@ -77,10 +78,10 @@ namespace cvsTool.Controllor
         }
 
         public void storeHistoryPriceToDataTable(O2GSession session, O2GResponse response, string sInstrument)
-        {         
+        {
             string ss = string.Format("Request with RequestID={0} is completed:", response.RequestID);
             updateLogDelegate(ss);
-
+            DataTable tmpTable = InstrumentDT.Clone();
             O2GResponseReaderFactory factory = session.getResponseReaderFactory();
             if (factory != null)
             {
@@ -92,12 +93,19 @@ namespace cvsTool.Controllor
                     {
                         InstrumentDT.Rows.Add(reader.getDate(ii), reader.getBidOpen(ii), reader.getBidHigh(ii), reader.getBidLow(ii), reader.getBidClose(ii),
                                 reader.getAskOpen(ii), reader.getAskHigh(ii), reader.getAskLow(ii), reader.getAskClose(ii), reader.getVolume(ii));
+                        tmpTable.Rows.Add(reader.getDate(ii), reader.getBidOpen(ii), reader.getBidHigh(ii), reader.getBidLow(ii), reader.getBidClose(ii),
+                                reader.getAskOpen(ii), reader.getAskHigh(ii), reader.getAskLow(ii), reader.getAskClose(ii), reader.getVolume(ii));
+
                     }
                     else
                     {
                         InstrumentDT.Rows.Add(reader.getDate(ii), reader.getBidClose(ii), reader.getAskClose(ii));
+                        tmpTable.Rows.Add(reader.getDate(ii), reader.getBidClose(ii), reader.getAskClose(ii));
+
                     }
-                }               
+                }
+                SaveDataToFile(tmpTable, sInstrument);
+                               
             }
         }
 
@@ -106,6 +114,13 @@ namespace cvsTool.Controllor
             string fileName = sInstrument.Replace("/", "2");
             fileName += ".csv";            
             Csv.SaveCSV(InstrumentDT, fileName);
+        }
+
+        private void SaveDataToFile(DataTable dt, string sInstrument)
+        {
+            string fileName = sInstrument.Replace("/", "2");
+            fileName += ".csv";
+            Csv.AppendToCSV(dt, fileName);
         }
         /// <summary>
         /// Print process name and sample parameters
@@ -126,6 +141,11 @@ namespace cvsTool.Controllor
             getHistoryThread = new Thread(new ThreadStart(getHistoryPrice));
             getHistoryThread.Start();
         }
+        public void startSimulate()
+        {
+            simulateThread = new Thread(new ThreadStart(Model.simulator.startSimulate));
+            simulateThread.Start();
+        }
         public void stopGetHistroyPrice()
         {
             if(getHistoryThread!=null)
@@ -144,7 +164,7 @@ namespace cvsTool.Controllor
 
                 PrintSampleParams("GetHistPrices", loginParams, sampleParams);
 
-                session = O2GTransport.createSession();
+                 session = O2GTransport.createSession();
                 SessionStatusListener statusListener = new SessionStatusListener(session, loginParams.SessionID, loginParams.Pin);
                 session.subscribeSessionStatus(statusListener);
                 statusListener.Reset();
@@ -154,10 +174,11 @@ namespace cvsTool.Controllor
                     ResponseListener responseListener = new ResponseListener(session);
                     session.subscribeResponse(responseListener);
                     GetHistoryPrices(session, sampleParams.Instrument, sampleParams.Timeframe, sampleParams.DateFrom, sampleParams.DateTo, responseListener);
-                   // Console.WriteLine("Done!");
+                    Console.WriteLine("Done!");
                     updateLogDelegate("Done!");
-                    writeHistoryPriceToFile(sampleParams.Instrument);
-                    updateNames(sampleParams.Instrument);
+                    PersonForm.EnableStandby();
+             //       writeHistoryPriceToFile(sampleParams.Instrument);
+             //       updateNames(sampleParams.Instrument);
                     statusListener.Reset();
                     session.logout();
                     statusListener.WaitEvents();
@@ -167,8 +188,8 @@ namespace cvsTool.Controllor
             }
             catch (Exception e)
             {
-                //Console.WriteLine("Exception: {0}", e.ToString());
-                updateLogDelegate(string.Format("Exception: {0}", e.ToString()));
+                Console.WriteLine("Exception: {0}", e.ToString());
+               // updateLogDelegate(string.Format("Exception: {0}", e.ToString()));
             }
             finally
             {
@@ -239,7 +260,7 @@ namespace cvsTool.Controllor
                     // DateTime.Subtraction(dtTo, dtFirst)/ Subtraction
                     long percent = (dtTo.Ticks - dtFirst.Ticks) * 100 / (dtTo.Ticks - dtFrom.Ticks);
                     
-                    updateProcessDelegate((int)percent);
+                    updateProcessDelegate((int)percent, this.InstrumentDT.Rows.Count);
                 }
                 else
                 {

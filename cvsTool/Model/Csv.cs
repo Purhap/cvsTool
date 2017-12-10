@@ -30,7 +30,7 @@ namespace cvsTool.Model
         {
 
         }
-        public void ReadToDataTable(DataTable dt, string fileName)
+        public static void ReadToDataTable(DataTable dt, string fileName)
         {
             FileStream fs = new FileStream(fileName, System.IO.FileMode.Open, System.IO.FileAccess.Read);
 
@@ -131,5 +131,42 @@ namespace cvsTool.Model
             return r;
         }
 
+        internal static void AppendToCSV(DataTable dt, string fileName)
+        {
+            Boolean r = false;
+            FileStream fs = new FileStream(fileName, System.IO.FileMode.Append, System.IO.FileAccess.Write);
+            StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.Default);
+            string data = "";
+
+            //写出列名称
+            //for (int i = 0; i < dt.Columns.Count; i++)
+            //{
+            //    data += dt.Columns[i].ColumnName.ToString();
+            //    if (i < dt.Columns.Count - 1)
+            //    {
+            //        data += ",";
+            //    }
+            //}
+            //sw.WriteLine(data);
+
+            //写出各行数据
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                data = "";
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    data += dt.Rows[i][j].ToString();
+                    if (j < dt.Columns.Count - 1)
+                    {
+                        data += ",";
+                    }
+                }
+                sw.WriteLine(data);
+            }
+
+            sw.Close();
+            fs.Close();
+
+        }
     }
 }

@@ -7,12 +7,36 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using cvsTool.Controllor;
+using System.Runtime.InteropServices;
+
+
 
 namespace cvsTool.View
 {
-  
+ 
+
     public partial class PersonForm : Form
    {
+        [DllImport("kernel32.dll")]
+        public static extern uint SetThreadExecutionState(uint esFlags);
+
+        //禁止休眠和睡眠
+        public static void DisableStandby()
+        {
+            SetThreadExecutionState(ES_CONTINUOUS | ES_SYSTEM_REQUIRED | ES_DISPLAY_REQUIRED);
+        }
+        //允许睡醒和休眠
+        public static void EnableStandby()
+        {
+            SetThreadExecutionState(ES_CONTINUOUS);
+        }
+
+        const uint ES_SYSTEM_REQUIRED = 0x00000001;
+        const uint ES_DISPLAY_REQUIRED = 0x00000002;
+        const uint ES_CONTINUOUS = 0x80000000;
+        private Button button3;
+        private TextBox textBox3;
+        private RichTextBox richTextBox1;
         public Chart chartForm;
         
         public PersonForm()
@@ -58,6 +82,9 @@ namespace cvsTool.View
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.logTextBox = new System.Windows.Forms.RichTextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // textBox1
@@ -76,9 +103,9 @@ namespace cvsTool.View
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(381, 45);
+            this.button1.Location = new System.Drawing.Point(337, 45);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(164, 23);
+            this.button1.Size = new System.Drawing.Size(129, 23);
             this.button1.TabIndex = 2;
             this.button1.Text = "Get History Prices";
             this.button1.UseVisualStyleBackColor = true;
@@ -105,7 +132,7 @@ namespace cvsTool.View
             // 
             this.logTextBox.Location = new System.Drawing.Point(109, 162);
             this.logTextBox.Name = "logTextBox";
-            this.logTextBox.Size = new System.Drawing.Size(436, 185);
+            this.logTextBox.Size = new System.Drawing.Size(361, 185);
             this.logTextBox.TabIndex = 5;
             this.logTextBox.Text = "";
             // 
@@ -118,9 +145,39 @@ namespace cvsTool.View
             this.label1.TabIndex = 6;
             this.label1.Text = "0%";
             // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(513, 45);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(130, 23);
+            this.button3.TabIndex = 7;
+            this.button3.Text = "Start Simulate";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(513, 74);
+            this.textBox3.Multiline = true;
+            this.textBox3.Name = "textBox3";
+            this.textBox3.Size = new System.Drawing.Size(374, 79);
+            this.textBox3.TabIndex = 8;
+            this.textBox3.Text = "Null";
+            // 
+            // richTextBox1
+            // 
+            this.richTextBox1.Location = new System.Drawing.Point(522, 252);
+            this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.Size = new System.Drawing.Size(383, 96);
+            this.richTextBox1.TabIndex = 9;
+            this.richTextBox1.Text = "";
+            // 
             // PersonForm
             // 
             this.ClientSize = new System.Drawing.Size(951, 371);
+            this.Controls.Add(this.richTextBox1);
+            this.Controls.Add(this.textBox3);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.logTextBox);
             this.Controls.Add(this.progressBar1);
@@ -136,10 +193,7 @@ namespace cvsTool.View
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.textBox1.Text = "2";
-            this.textBox2.Text = "jacky";
-            this.button1.Enabled = false;
-
+            DisableStandby();
             Controllor.updateProcessDelegate = new Controllor.PersonControllor.UpdateUIDelegate(updateProcessBar);
             Controllor.updateLogDelegate = new Controllor.PersonControllor.UpdateLogDelegate(updateLogTextBox);
             Controllor.startGetHistroyPrice();
@@ -153,16 +207,16 @@ namespace cvsTool.View
             
         }
 
-        private void updateProcessBar(int value)
+        private void updateProcessBar(int value, int count)
         {
             if (this.progressBar1.InvokeRequired)
             {
-                this.Invoke(Controllor.updateProcessDelegate, new object[] { value });
+                this.Invoke(Controllor.updateProcessDelegate, new object[] { value, count });
             }     
             else
             {
                 this.progressBar1.Value = value;
-                this.label1.Text = string.Format("{0}%", value.ToString());           
+                this.label1.Text = string.Format("{0}%  tick:{1}", value, count);           
             }
         }
 
@@ -178,6 +232,43 @@ namespace cvsTool.View
                 this.logTextBox.Select(this.logTextBox.TextLength, 0);//光标定位到文本最后
                 this.logTextBox.ScrollToCaret();
             }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            DisableStandby();
+            Controllor.Model.simulator.updateCurrentTickDelegate = new Model.Simulator.UpdateCurrentTickDelegate(updateCurrentTick);
+            Controllor.Model.simulator.updateTradeLogDelegate = new Model.Simulator.UpdateTradeLogDelegate(updateTradeLogTextBox);
+            Controllor.startSimulate();
+        }
+
+        private void updateCurrentTick(string value)
+        {
+            if (this.textBox3.InvokeRequired)
+            {
+                this.Invoke(Controllor.Model.simulator.updateCurrentTickDelegate, new object[] { value });
+            }
+            else
+            {
+                this.textBox3.Text = value;
+
+            }
+
+        }
+
+        private void updateTradeLogTextBox(string value)
+        {
+            if (this.richTextBox1.InvokeRequired)
+            {
+                this.Invoke(Controllor.Model.simulator.updateTradeLogDelegate, new object[] { value });
+            }
+            else
+            {
+                this.richTextBox1.Text += value;
+                this.richTextBox1.Select(this.richTextBox1.TextLength, 0);//光标定位到文本最后
+                this.richTextBox1.ScrollToCaret();
+            }
+           
         }
     }
 }

@@ -20,11 +20,17 @@ namespace cvsTool.Model
             get { return _name; }
             set { _id = value; OnPropertyChanged("Name"); }
         }
-        public Csv csv;
+        public Csv Csv;
+
+        public Simulator simulator;
+
 
         public Person()
         {
-            csv = new Csv(_name);
+            Csv = new Csv(_name);
+
+            simulator = new Simulator();
+
         }
         #region INotifyPropertyChanged 成员
 
