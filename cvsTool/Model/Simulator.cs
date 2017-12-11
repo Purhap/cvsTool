@@ -151,7 +151,7 @@ namespace cvsTool.Model
             ss += String.Format("\r\nTrade:{0} profit:{1} ", tradeTimes, profit);
             ss += String.Format("\r\nGood Trade:{0} Bad Trade:{1} ", goodTradeTimes, badTradeTimes);
             updateCurrentTickDelegate(ss);
-            string filename = string.Format("TradeInformation{0:yyyymmddhhmm}.csv");
+            string filename = string.Format("TradeInformation{0:yyyyMMddHHmm}.csv",DateTime.Now);
             Csv.SaveCSV(TradeDt, filename);
             ss += "\r\nSave Trade data in " + filename;
             updateCurrentTickDelegate(ss);

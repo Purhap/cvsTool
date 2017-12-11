@@ -139,15 +139,18 @@ namespace cvsTool.Model
             string data = "";
 
             //写出列名称
-            //for (int i = 0; i < dt.Columns.Count; i++)
-            //{
-            //    data += dt.Columns[i].ColumnName.ToString();
-            //    if (i < dt.Columns.Count - 1)
-            //    {
-            //        data += ",";
-            //    }
-            //}
-            //sw.WriteLine(data);
+            if(fs.Length<1)
+            { 
+                for (int i = 0; i < dt.Columns.Count; i++)
+                {
+                    data += dt.Columns[i].ColumnName.ToString();
+                    if (i < dt.Columns.Count - 1)
+                    {
+                        data += ",";
+                    }
+                }
+                sw.WriteLine(data);
+            }
 
             //写出各行数据
             for (int i = 0; i < dt.Rows.Count; i++)

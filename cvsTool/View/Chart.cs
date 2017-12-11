@@ -19,8 +19,6 @@ namespace cvsTool.View
         private DataTable dt;
         private DataTable drawDt;
 
-        private Bitmap bidBp;
-        private Bitmap askBp;
         private Graphics g;
         public Chart(PersonForm p, PersonControllor _controllor)
         {
@@ -97,20 +95,23 @@ namespace cvsTool.View
 
 
             }
-            // chart1.Series[0].XValueType = ChartValueType.DateTime;
-            chart1.Series[0].XValueType = ChartValueType.Auto;
-             chart1.Series[0].YValuesPerPoint = 4;
+           // chart1.Series[0].XValueType = ChartValueType.DateTime;
+            chart1.Series[0].XValueType = ChartValueType.String;
+            chart1.Series[0].YValuesPerPoint = 2;
             chart1.Series[0].YValueType = ChartValueType.Double;
             chart1.Series[0].XValueMember = "DateStamp";
             chart1.Series[0].YValueMembers = "HighPrice, LowPrice, OpenPrice, ClosePrice";
             chart1.Series[0].IsXValueIndexed = true;
+         //   chart1.Series[0].IsValueShownAsLabel = true;
             chart1.Series[0].BorderColor = System.Drawing.Color.Black;
             chart1.Series[0].Color = System.Drawing.Color.Black;
             chart1.Series[0].CustomProperties = "PriceDownColor=Green, PriceUpColor=Red";
             chart1.Series[0].Points.DataBindXY(XPointMember, YPointMember0, YPointMember1, YPointMember2, YPointMember3);
-           // chart1.Series[0].BorderWidth = 2;
+         //   chart1.Series[0].LegendToolTip = "Target Output";
+         //   chart1.Series[0].LegendText = "Target Output";
+            // chart1.Series[0].BorderWidth = 2;
 
-           // chart1.Series[0].BorderColor = System.Drawing.Color.Black;
+            // chart1.Series[0].BorderColor = System.Drawing.Color.Black;
             //chart1.Series[0].Color = System.Drawing.Color.Black;
 
             // chart1.Series[0]["PriceUpColor"] = "Red";
@@ -121,15 +122,18 @@ namespace cvsTool.View
             //chart1.ChartAreas[0].AxisY.Maximum = 180;
             //chart1.DataManipulator.FinancialFormula(FinancialFormula.MovingAverage, "15", "Daily", "MA");
             chart1.ChartAreas[0].AxisY.IsStartedFromZero = false;
-            chart1.ChartAreas[0].AxisX.TextOrientation = TextOrientation.Rotated270;
+       //     chart1.ChartAreas[0].AxisX.TextOrientation = TextOrientation.Stacked;
             chart1.ChartAreas[0].CursorX.IsUserEnabled = true;//打开X轴滚动条
             chart1.ChartAreas[0].CursorY.IsUserEnabled = true;//打开Y轴滚动条
             chart1.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;//打开X轴滚动条 区域
             chart1.ChartAreas[0].CursorY.IsUserSelectionEnabled = true;//打开Y轴滚动条 区域
             chart1.ChartAreas[0].CursorX.AutoScroll = true;
             chart1.ChartAreas[0].CursorY.AutoScroll = true;
-            // chart1.ChartAreas[0].AxisX.Interval = 5;
-            
+            chart1.ChartAreas[0].AxisX.Interval = 1;
+            chart1.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
+            chart1.ChartAreas[0].AxisY.MajorGrid.Enabled = false;
+
+
 
 
         }
@@ -191,7 +195,7 @@ namespace cvsTool.View
             for (int count = 0; count < drawDt.Rows.Count; count++)
             {
                 //storing Values for X axis  
-                XPointMember[count] = drawDt.Rows[count]["DateTime"].ToString().Substring(10, 8);
+                XPointMember[count] = string.Format("{0:yyyyMMdd HH:mm}", Convert.ToDateTime(drawDt.Rows[count]["DateTime"]));
                 //storing values for Y Axis  
                 //YPointMember0[count] = Convert.ToDouble(drawDt.Rows[count]["BidOpen"]);
                 //YPointMember1[count] = Convert.ToDouble(drawDt.Rows[count]["BidHigh"]);
@@ -238,6 +242,11 @@ namespace cvsTool.View
             // chart1.ChartAreas[0].AxisX.Interval = 5;
 
 
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+            this.dateTimePicker2.Value = this.dateTimePicker1.Value;
         }
     }
 }

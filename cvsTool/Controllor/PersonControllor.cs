@@ -65,8 +65,8 @@ namespace cvsTool.Controllor
                 {
                     if (reader.isBar)
                     {
-                        Console.WriteLine("DateTime={0}, BidOpen={1}, BidHigh={2}, BidLow={3}, BidClose={4}, AskOpen={5}, AskHigh={6}, AskLow={7}, AskClose={8}, Volume={9}",
-                                reader.getDate(ii), reader.getBidOpen(ii), reader.getBidHigh(ii), reader.getBidLow(ii), reader.getBidClose(ii),
+                        Console.WriteLine("DateTime={0:yyyyMMdd hh:mm:ss}, BidOpen={1}, BidHigh={2}, BidLow={3}, BidClose={4}, AskOpen={5}, AskHigh={6}, AskLow={7}, AskClose={8}, Volume={9}",
+                                Convert.ToDateTime(reader.getDate(ii)), reader.getBidOpen(ii), reader.getBidHigh(ii), reader.getBidLow(ii), reader.getBidClose(ii),
                                 reader.getAskOpen(ii), reader.getAskHigh(ii), reader.getAskLow(ii), reader.getAskClose(ii), reader.getVolume(ii));
                     }
                     else
@@ -79,8 +79,8 @@ namespace cvsTool.Controllor
 
         public void storeHistoryPriceToDataTable(O2GSession session, O2GResponse response, string sInstrument)
         {
-            string ss = string.Format("Request with RequestID={0} is completed:", response.RequestID);
-            updateLogDelegate(ss);
+         //   string ss = string.Format("Request with RequestID={0} is completed:", response.RequestID);
+        //    updateLogDelegate(ss);
             DataTable tmpTable = InstrumentDT.Clone();
             O2GResponseReaderFactory factory = session.getResponseReaderFactory();
             if (factory != null)
