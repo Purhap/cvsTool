@@ -14,7 +14,7 @@ namespace cvsTool.Model
         // public DateTime StartTime;
         //public DateTime EndTime;
         
-        string[] columnsNames = new string[]{"DateTime","BidOpen","BidHigh","BidLow","BidClose","AskOpen","AskHigh","AskLow","AskClose","Volume"};
+        public string[] columnsNames = new string[]{"DateTime","BidOpen","BidHigh","BidLow","BidClose","AskOpen","AskHigh","AskLow","AskClose","Volume"};
         public Csv(string argName)
         {
             name = argName;
@@ -28,6 +28,46 @@ namespace cvsTool.Model
 
         public void AppendToDataTable(DataTable dt)
         {
+
+        }
+        public static DataTable Distinct(DataTable SourceDt, string filedName)
+        {
+          //  DataView dv = dt.DefaultView;
+         //   DataTable DistTable = dv.ToTable("DateTime", true, filedNames);
+          //  return DistTable;
+
+
+
+            for (int i = SourceDt.Rows.Count - 2; i > 0; i--)
+            {
+                DataRow[] rows = SourceDt.Select(string.Format("{0}='{1}'", filedName, SourceDt.Rows[i][filedName]));
+                if (rows.Length > 1)
+                {
+                    SourceDt.Rows.RemoveAt(i);
+                }
+            }
+            return SourceDt;
+        }
+        public static void cleanfile(string  SfileName, string TfileName)
+        {
+            FileStream fsr = new FileStream(SfileName, System.IO.FileMode.Open, System.IO.FileAccess.Read);
+            FileStream fsw = new FileStream(TfileName, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+            StreamWriter sw = new StreamWriter(fsw, System.Text.Encoding.Default);
+            StreamReader sr = new StreamReader(fsr, System.Text.Encoding.Default);
+            string strLine = "";
+            string lastStrLine = "";
+            while ((strLine = sr.ReadLine()) != null)
+            {
+                if (strLine != lastStrLine)
+                {
+                    lastStrLine = strLine;
+                    sw.WriteLine(strLine);
+                }
+            }
+            sr.Close();
+            sw.Close();
+            fsr.Close();
+            fsw.Close();
 
         }
         public static void ReadToDataTable(DataTable dt, string fileName)
@@ -48,6 +88,8 @@ namespace cvsTool.Model
             //标示是否是读取的第一行
             bool IsFirst = true;
             //逐行读取CSV中的数据
+            
+
             while ((strLine = sr.ReadLine()) != null)
             {
                 if (IsFirst == true)
@@ -62,14 +104,14 @@ namespace cvsTool.Model
                         {
                             DataColumn dc = new DataColumn(tableHead[i],typeof(DateTime));
                             dt.Columns.Add(dc);
+                            
                         }
                         else
                         {
                             DataColumn dc = new DataColumn(tableHead[i],typeof(double));
                             dt.Columns.Add(dc);
-                        }
-                  
-                    }
+                        }                  
+                    }                              
                 }
                 else
                 {
@@ -80,13 +122,9 @@ namespace cvsTool.Model
                         dr[j] = aryLine[j];
                     }
                     dt.Rows.Add(dr);
+                   
                 }
             }
-         //   if (aryLine != null && aryLine.Length > 0)
-         //   {
-         //       dt.DefaultView.Sort = tableHead[0] + " " + "asc";
-         //   }
-
             sr.Close();
             fs.Close();
           //  return dt;

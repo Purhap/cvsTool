@@ -37,6 +37,7 @@ namespace cvsTool.View
         private Button button3;
         private TextBox textBox3;
         private RichTextBox richTextBox1;
+        private Button button4;
         public Chart chartForm;
         
         public PersonForm()
@@ -85,6 +86,7 @@ namespace cvsTool.View
             this.button3 = new System.Windows.Forms.Button();
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.button4 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // textBox1
@@ -172,9 +174,20 @@ namespace cvsTool.View
             this.richTextBox1.TabIndex = 9;
             this.richTextBox1.Text = "";
             // 
+            // button4
+            // 
+            this.button4.Location = new System.Drawing.Point(215, 121);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(116, 23);
+            this.button4.TabIndex = 10;
+            this.button4.Text = "Clean DataTable";
+            this.button4.UseVisualStyleBackColor = true;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // PersonForm
             // 
             this.ClientSize = new System.Drawing.Size(951, 371);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.button3);
@@ -270,5 +283,35 @@ namespace cvsTool.View
             }
            
         }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            //DataTable dis = new DataTable();
+            //DataTable raw = new DataTable();
+            //DateTime d1 = DateTime.Now;
+            //Model.Csv.ReadToDataTable(raw, "EUR2USD.csv");
+            //DateTime d2 = DateTime.Now;
+            //dis = Model.Csv.Distinct(raw,"DateTime");
+            //DateTime d3 = DateTime.Now;
+            //Model.Csv.SaveCSV(dis, "dis.csv");
+            //DateTime d4 = DateTime.Now;
+            //string ss;
+            //ss = string.Format("step1:{0:HH:mm:ss} ", d1);
+            //ss +=string.Format("step2:{0:HH:mm:ss} ", d2);
+            //ss += string.Format("step3:{0:HH:mm:ss} ", d3);
+            //ss += string.Format("step4:{0:HH:mm:ss} ", d4);
+            //MessageBox.Show(ss);
+
+            DateTime d1 = DateTime.Now;
+            Model.Csv.cleanfile("EUR2USD.csv", "EUR2USD1.csv");
+            DateTime d2 = DateTime.Now;
+            string ss;
+            ss = string.Format("step1:{0:HH:mm:ss} ", d1);
+            ss +=string.Format("step2:{0:HH:mm:ss} ", d2);
+            MessageBox.Show(ss);
+
+
+        }
+
     }
 }

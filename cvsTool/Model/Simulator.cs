@@ -155,6 +155,9 @@ namespace cvsTool.Model
             Csv.SaveCSV(TradeDt, filename);
             ss += "\r\nSave Trade data in " + filename;
             updateCurrentTickDelegate(ss);
+            simulateDt.Clear();
+            TradeDt.Clear();
+
 
         }
         private void loadData()
@@ -219,6 +222,41 @@ namespace cvsTool.Model
                 closeAskPosition(index);
                 estimateThisTrade();
             }
+            else if(stopCondition())
+            {
+                closeAskPosition(index);
+                estimateThisTrade();
+            }
+        }
+
+        private bool stopCondition()
+        {
+            if(currentPosition.status == PositionStatus.Bid) //long
+            {
+                if(this.currentPrice <= (this.currentPosition.openPrice-0.0005))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else if(currentPosition.status == PositionStatus.Ask) //short
+            {
+                if (this.currentPrice >= (this.currentPosition.openPrice + 0.0005))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
+            }            
         }
 
         private void closeAskPosition(int index)
@@ -282,7 +320,12 @@ namespace cvsTool.Model
             {
                 closeBidPosition(index);
                 estimateThisTrade();
-            }           
+            }     
+            else if(stopCondition())
+            {
+                closeBidPosition(index);
+                estimateThisTrade();
+            }      
         }
 
         private void estimateThisTrade()
@@ -307,22 +350,36 @@ namespace cvsTool.Model
             {
                 if((currentMA.M5 < currentMA.M10)&& (currentMA.M5 < currentMA.M20))
                 {
-                    openBidPosition(index);
+                    if (waveRate() > 0.0003)
+                    {
+                        openBidPosition(index);
+                    }
                 }                
             }
             else if ((currentMATrend.M5_SlopeRatio < 0) && (currentMATrend.M10_SlopeRatio < 0) && (currentMATrend.M20_SlopeRatio < 0))
             {
                 if ((currentMA.M5 > currentMA.M10) && (currentMA.M5 > currentMA.M20))
                 {
-                    openAskPosition(index);
+                    if (waveRate() > 0.0003)
+                    {
+                        openAskPosition(index);
+                    }
                 }
             }
+        }
+
+        private double waveRate()
+        {
+            double waveS = Math.Abs(currentMA.M5 - currentMA.M10);
+            double waveM = Math.Abs(currentMA.M5 - currentMA.M20);
+            double waveL = Math.Abs(currentMA.M5 - currentMA.M60);
+            return Math.Sqrt(waveS * waveS + waveM * waveM);
         }
 
         private void openAskPosition(int index)
         {
             this.tradeTimes++;
-            this.currentPosition.status = PositionStatus.Bid;
+            this.currentPosition.status = PositionStatus.Ask;
             this.currentPosition.index = index;
             this.currentPosition.openPrice = currentPrice;
             this.currentPosition.openTime = (DateTime)simulateDt.Rows[index]["DateTime"];
@@ -332,7 +389,7 @@ namespace cvsTool.Model
         private void openBidPosition(int index)
         {
             this.tradeTimes++;
-            this.currentPosition.status = PositionStatus.Ask;
+            this.currentPosition.status = PositionStatus.Bid;
             this.currentPosition.index = index;
             this.currentPosition.openPrice = currentPrice;
             this.currentPosition.openTime = (DateTime)simulateDt.Rows[index]["DateTime"];
