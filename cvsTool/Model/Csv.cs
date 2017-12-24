@@ -168,7 +168,45 @@ namespace cvsTool.Model
             r = true;
             return r;
         }
+        public static Boolean SaveCSV(DataTable dt, string fullFileName,string comments)
+        {
+            Boolean r = false;
+            FileStream fs = new FileStream(fullFileName, System.IO.FileMode.Create, System.IO.FileAccess.Write);
+            StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.Default);
+            string data = "";
 
+            //写出列名称
+            for (int i = 0; i < dt.Columns.Count; i++)
+            {
+                data += dt.Columns[i].ColumnName.ToString();
+                if (i < dt.Columns.Count - 1)
+                {
+                    data += ",";
+                }
+            }
+            sw.WriteLine(data);
+
+            //写出各行数据
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                data = "";
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    data += dt.Rows[i][j].ToString();
+                    if (j < dt.Columns.Count - 1)
+                    {
+                        data += ",";
+                    }
+                }
+                sw.WriteLine(data);
+            }
+            sw.Write(comments);
+            sw.Close();
+            fs.Close();
+
+            r = true;
+            return r;
+        }
         internal static void AppendToCSV(DataTable dt, string fileName)
         {
             Boolean r = false;

@@ -162,9 +162,9 @@ namespace cvsTool.View
             this.textBox3.Location = new System.Drawing.Point(513, 74);
             this.textBox3.Multiline = true;
             this.textBox3.Name = "textBox3";
+            this.textBox3.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBox3.Size = new System.Drawing.Size(374, 79);
             this.textBox3.TabIndex = 8;
-            this.textBox3.Text = "Null";
             // 
             // richTextBox1
             // 
@@ -263,7 +263,9 @@ namespace cvsTool.View
             }
             else
             {
-                this.textBox3.Text = value;
+                this.textBox3.Text += value;
+                this.textBox3.Select(this.textBox3.TextLength, 0);//光标定位到文本最后
+                this.textBox3.ScrollToCaret();
 
             }
 
@@ -309,7 +311,6 @@ namespace cvsTool.View
             ss = string.Format("step1:{0:HH:mm:ss} ", d1);
             ss +=string.Format("step2:{0:HH:mm:ss} ", d2);
             MessageBox.Show(ss);
-
 
         }
 

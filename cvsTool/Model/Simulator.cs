@@ -12,9 +12,11 @@ namespace cvsTool.Model
         public DataTable simulateDt;
         public UInt64 tradeTimes;
 
+        public DateTime currentTime;
         public double profit;
         public DataTable TradeDt;
 
+        public int simulationIndex;
         private PositionStatus currentStatus;
         private PostionStruct currentPosition;
         private Trend currentPriceTrend;
@@ -39,13 +41,15 @@ namespace cvsTool.Model
 
         public struct TestParamStruct
         {
-            double k1;
-            double k2;
+            public int k1;// hold time
+            public double k2; //stop loss value
+            public double k3; //wate ratio
+            public double k4;
         }
         public enum PositionStatus{
             None,
-            Bid,
-            Ask,
+            Long,
+            Short,
         }
         public enum Trend
         {
@@ -83,7 +87,7 @@ namespace cvsTool.Model
             internal double quantity;
         }
         
-        public TestParamStruct testParam;
+        public static TestParamStruct testParam;
         private double currentPrice;
         private int badTradeTimes;
         private int goodTradeTimes;
@@ -97,17 +101,16 @@ namespace cvsTool.Model
             badTradeTimes = 0;
             goodTradeTimes = 0;
             profit = 0;
+            simulationIndex = 0;
             currentPriceTrend = Trend.None;
             lastPriceTrend = Trend.None;
-
-            initializeTradeDataTable();
-
+            
         }
 
         private void initializeTradeDataTable()
         {
-            string[] columnsNames = new string[] { "OpenTime", "OpenPrice", "BidAsk","Quantity", "CloseTime", "ClosePrice",  "Profit"};
-            TradeDt = new DataTable();
+            string[] columnsNames = new string[] { "OpenTime", "OpenPrice", "L/S","Quantity", "CloseTime", "ClosePrice",  "Profit"};
+            
             for(int i = 0; i<7; i++)
             {
                 if ((i == 0)||(i==4))
@@ -124,21 +127,46 @@ namespace cvsTool.Model
                 {
                     DataColumn dc = new DataColumn(columnsNames[i], typeof(double));
                     TradeDt.Columns.Add(dc);
-                }
-               
+                }               
             }
         }
 
         public void startSimulate()
         {
+            for (int i = 1; i < 10; i++)
+            {
+                for (int j = 1; j < 10; j++)
+                {
+                    for (int k = 0; k < 6; k++)
+                    {
+                        testParam.k1 = i;
+                        testParam.k2 = 0.0001 * j;
+                        testParam.k3 = 0.0001 * k;
+                        runOnceSimulation();
+                    }
+                }
+            }
+        }
+
+        private void runOnceSimulation()
+        {
+            simulationIndex++;
+            string ss = "NO. ";
+            ss += String.Format("{0} ", simulationIndex);
             startSimulateTime = DateTime.Now;
-            string ss = "Start Time: ";            
+            ss += "\r\nStart Time: ";
             ss += String.Format("{0:yyyy-MM-dd HH:mm:ss}", startSimulateTime);
             updateCurrentTickDelegate(ss);
-            
-            loadData();
+            if(simulateDt.Rows.Count<3)
+            { 
+               loadData();
+            }
             loadDataTableCompleteTime = DateTime.Now;
             loadTestParam();
+
+            TradeDt = new DataTable();
+            initializeTradeDataTable();
+            onInit();
             runSimulate();
             finishSimulateTime = DateTime.Now;
             ss += "\r\nComplete Time:";
@@ -151,15 +179,18 @@ namespace cvsTool.Model
             ss += String.Format("\r\nTrade:{0} profit:{1} ", tradeTimes, profit);
             ss += String.Format("\r\nGood Trade:{0} Bad Trade:{1} ", goodTradeTimes, badTradeTimes);
             updateCurrentTickDelegate(ss);
-            string filename = string.Format("TradeInformation{0:yyyyMMddHHmm}.csv",DateTime.Now);
-            Csv.SaveCSV(TradeDt, filename);
+            string filename = string.Format("TradeInformation{0:yyyyMMddHHmm}.csv", DateTime.Now);
+            
             ss += "\r\nSave Trade data in " + filename;
+            string comments = string.Format("\r\n K1: {0},K2: {1},K3: {2}", testParam.k1, testParam.k2, testParam.k3);
+            Csv.SaveCSV(TradeDt, filename, comments);
             updateCurrentTickDelegate(ss);
-            simulateDt.Clear();
-            TradeDt.Clear();
-
+           // simulateDt.Clear();
+          //  TradeDt.Clear();
+            TradeDt.Dispose();
 
         }
+
         private void loadData()
         {
             Csv.ReadToDataTable(simulateDt, "EUR2USD.csv");
@@ -176,62 +207,109 @@ namespace cvsTool.Model
             for (int i = 200; i < end; i++)
             {
                 monitorPriceTrend(i);
-                if (i % 10000 == 0)
-                {
-                    string ss = "Start Time: ";
-                    ss += String.Format("{0:yyyy-MM-dd HH:mm:ss}", startSimulateTime);
 
-                    ss += "\r\n";
-                    ss += String.Format("{0:yyyy-MM-dd HH:mm:ss}", simulateDt.Rows[i]["DateTime"]);
+                //do not update process
+                //if (i % 10000 == 0)
+                //{
+                //    string ss = "Start Time: ";
+                //    ss += String.Format("{0:yyyy-MM-dd HH:mm:ss}", startSimulateTime);
 
-                    if (loadDataTableCompleteTime > startSimulateTime)
-                    {
-                        ss += "\r\n";
-                        ss += "Load Data Period: ";
+                //    ss += "\r\n";
+                //    ss += String.Format("{0:yyyy-MM-dd HH:mm:ss}", simulateDt.Rows[i]["DateTime"]);
 
-                        ss += String.Format("{0}", loadDataTableCompleteTime.Subtract(startSimulateTime));
-                        if (finishSimulateTime > loadDataTableCompleteTime)
-                        {
-                            ss += "\r\n";
-                            ss += "Complete Time:";
-                            ss += String.Format("{0:yyyy-MM-dd HH:mm:ss}", finishSimulateTime);
-                        }
+                //    if (loadDataTableCompleteTime > startSimulateTime)
+                //    {
+                //        ss += "\r\n";
+                //        ss += "Load Data Period: ";
 
-                    }
-                    updateCurrentTickDelegate(ss);
-                }
+                //        ss += String.Format("{0}", loadDataTableCompleteTime.Subtract(startSimulateTime));
+                //        if (finishSimulateTime > loadDataTableCompleteTime)
+                //        {
+                //            ss += "\r\n";
+                //            ss += "Complete Time:";
+                //            ss += String.Format("{0:yyyy-MM-dd HH:mm:ss}", finishSimulateTime);
+                //        }
+
+                //    }
+                //    updateCurrentTickDelegate(ss);
+               // }
                 switch (currentStatus)
                 {
                     case PositionStatus.None:
-                        runOpenPositionStrategy(i);
+                        if (openPositionCondition(i))
+                        {
+                            runOpenPositionStrategy(i);
+                        }
                         break;
-                    case PositionStatus.Bid:
-                        runCloseBidStrategy(i);
+                    case PositionStatus.Long:
+                        runCloseLongStrategy(i);
                         break;
-                    case PositionStatus.Ask:
-                        runCloseAskStrategy(i);
+                    case PositionStatus.Short:
+                        runCloseShortStrategy(i);
                         break;
                 }
             }
         }
 
-        private void runCloseAskStrategy(int index)
+        private bool openPositionCondition(int i)
         {
-            if ((index - currentPosition.index) == 7)
+            bool ret = true;
+            DateTime now = getCurrentTime(i);
+            if(now.DayOfWeek == DayOfWeek.Friday)
             {
-                closeAskPosition(index);
+                ret = false;
+            }
+            return ret;
+        }
+
+        private DateTime getCurrentTime(int i)
+        {
+            DateTime ret = Convert.ToDateTime(simulateDt.Rows[i]["DateTime"]);
+            return ret;
+        }
+
+        private void runCloseShortStrategy(int index)
+        {
+            if ((index - currentPosition.index) == testParam.k1)
+            {
+                closeShortPosition(index);
                 estimateThisTrade();
             }
             else if(stopCondition())
             {
-                closeAskPosition(index);
+                closeShortPosition(index);
+                estimateThisTrade();
+            }
+            else if(judgeWrong())
+            {
+                closeShortPosition(index);
                 estimateThisTrade();
             }
         }
 
+        private bool judgeWrong()
+        {
+            bool ret = false;
+            if (currentPosition.status == PositionStatus.Long)
+            {
+                if ((currentPrice - currentPosition.openPrice) < testParam.k2*(-1))
+                {
+                    ret = true;
+                }
+            }
+            else if(currentPosition.status == PositionStatus.Short)
+            {
+                if ((currentPrice - currentPosition.openPrice) > testParam.k2)
+                {
+                    ret = true;
+                }
+            }
+            return ret;
+        }
+
         private bool stopCondition()
         {
-            if(currentPosition.status == PositionStatus.Bid) //long
+            if(currentPosition.status == PositionStatus.Long) //long
             {
                 if(this.currentPrice <= (this.currentPosition.openPrice-0.0005))
                 {
@@ -242,7 +320,7 @@ namespace cvsTool.Model
                     return false;
                 }
             }
-            else if(currentPosition.status == PositionStatus.Ask) //short
+            else if(currentPosition.status == PositionStatus.Short) //short
             {
                 if (this.currentPrice >= (this.currentPosition.openPrice + 0.0005))
                 {
@@ -259,7 +337,7 @@ namespace cvsTool.Model
             }            
         }
 
-        private void closeAskPosition(int index)
+        private void closeShortPosition(int index)
         {
             this.tradeTimes++;
             this.currentPosition.closeTime = (DateTime)simulateDt.Rows[index]["DateTime"];
@@ -269,7 +347,7 @@ namespace cvsTool.Model
             profit += this.currentPosition.profit;
             currentStatus = PositionStatus.None;
         }
-        private void closeBidPosition(int index)
+        private void closeLongPosition(int index)
         {
             this.tradeTimes++;
             this.currentPosition.closeTime = (DateTime)simulateDt.Rows[index]["DateTime"];
@@ -280,7 +358,13 @@ namespace cvsTool.Model
             profit += this.currentPosition.profit;
             currentStatus = PositionStatus.None;
         }
-
+        private void onInit()
+        {
+            this.tradeTimes = 0;
+            profit = 0;
+            goodTradeTimes = 0;
+            badTradeTimes = 0;
+        }
         private void monitorPriceTrend(int index)
         {
             currentPrice = (double)simulateDt.Rows[index]["BidClose"];
@@ -309,23 +393,27 @@ namespace cvsTool.Model
             {
                 this.currentPriceTrend = Trend.Descend;
             }
-            
-            
+                        
         }
 
 
-        private void runCloseBidStrategy(int index)
+        private void runCloseLongStrategy(int index)
         {
             if ((index -currentPosition.index)==7)
             {
-                closeBidPosition(index);
+                closeLongPosition(index);
                 estimateThisTrade();
             }     
             else if(stopCondition())
             {
-                closeBidPosition(index);
+                closeLongPosition(index);
                 estimateThisTrade();
-            }      
+            }
+            else if (judgeWrong())
+            {
+                closeLongPosition(index);
+                estimateThisTrade();
+            }
         }
 
         private void estimateThisTrade()
@@ -350,9 +438,9 @@ namespace cvsTool.Model
             {
                 if((currentMA.M5 < currentMA.M10)&& (currentMA.M5 < currentMA.M20))
                 {
-                    if (waveRate() > 0.0003)
+                    if (waveRate() > testParam.k3)
                     {
-                        openBidPosition(index);
+                        openLongPosition(index);
                     }
                 }                
             }
@@ -360,7 +448,7 @@ namespace cvsTool.Model
             {
                 if ((currentMA.M5 > currentMA.M10) && (currentMA.M5 > currentMA.M20))
                 {
-                    if (waveRate() > 0.0003)
+                    if (waveRate() > testParam.k3)
                     {
                         openAskPosition(index);
                     }
@@ -379,17 +467,17 @@ namespace cvsTool.Model
         private void openAskPosition(int index)
         {
             this.tradeTimes++;
-            this.currentPosition.status = PositionStatus.Ask;
+            this.currentPosition.status = PositionStatus.Short;
             this.currentPosition.index = index;
             this.currentPosition.openPrice = currentPrice;
             this.currentPosition.openTime = (DateTime)simulateDt.Rows[index]["DateTime"];
             currentStatus = this.currentPosition.status;
         }
 
-        private void openBidPosition(int index)
+        private void openLongPosition(int index)
         {
             this.tradeTimes++;
-            this.currentPosition.status = PositionStatus.Bid;
+            this.currentPosition.status = PositionStatus.Long;
             this.currentPosition.index = index;
             this.currentPosition.openPrice = currentPrice;
             this.currentPosition.openTime = (DateTime)simulateDt.Rows[index]["DateTime"];
