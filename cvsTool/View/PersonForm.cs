@@ -37,19 +37,20 @@ namespace cvsTool.View
         private Button button4;
         private Button button5;
         private ComboBox comboBox1;
-        private Label label2;
-        private Label label3;
-        private Label label4;
         public Chart chartForm;
         public PersonForm view;
+
+        private List<Label> listLabel;
         
         public PersonForm()
         {
-            InitializeComponent();
+            
+            InitializeComponent();          
+
             view = this;
-
+            
         }
-
+        private UInt16 ParallelNb;
         private TextBox textBox1;
         private TextBox textBox2;
         private Button button1;
@@ -92,9 +93,6 @@ namespace cvsTool.View
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // textBox1
@@ -157,7 +155,7 @@ namespace cvsTool.View
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(774, 9);
+            this.button3.Location = new System.Drawing.Point(757, 36);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(102, 32);
             this.button3.TabIndex = 7;
@@ -167,19 +165,19 @@ namespace cvsTool.View
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(513, 74);
+            this.textBox3.Location = new System.Drawing.Point(688, 73);
             this.textBox3.Multiline = true;
             this.textBox3.Name = "textBox3";
             this.textBox3.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox3.Size = new System.Drawing.Size(490, 137);
+            this.textBox3.Size = new System.Drawing.Size(444, 137);
             this.textBox3.TabIndex = 8;
             this.textBox3.WordWrap = false;
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(522, 252);
+            this.richTextBox1.Location = new System.Drawing.Point(688, 252);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(481, 96);
+            this.richTextBox1.Size = new System.Drawing.Size(444, 96);
             this.richTextBox1.TabIndex = 9;
             this.richTextBox1.Text = "";
             // 
@@ -195,7 +193,7 @@ namespace cvsTool.View
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(901, 9);
+            this.button5.Location = new System.Drawing.Point(1020, 35);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(102, 32);
             this.button5.TabIndex = 11;
@@ -230,39 +228,9 @@ namespace cvsTool.View
             this.comboBox1.TabIndex = 13;
             this.comboBox1.Text = "3";
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(511, 9);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(41, 12);
-            this.label2.TabIndex = 14;
-            this.label2.Text = "label2";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(511, 32);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(41, 12);
-            this.label3.TabIndex = 15;
-            this.label3.Text = "label3";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(511, 55);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(41, 12);
-            this.label4.TabIndex = 16;
-            this.label4.Text = "label4";
-            // 
             // PersonForm
             // 
-            this.ClientSize = new System.Drawing.Size(1038, 371);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.label2);
+            this.ClientSize = new System.Drawing.Size(1164, 371);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
@@ -399,40 +367,53 @@ namespace cvsTool.View
         private void button5_Click(object sender, EventArgs e)
         {
             DisableStandby();
+            ParallelNb = Convert.ToUInt16(this.comboBox1.Text);
+            listLabel = new List<Label>(ParallelNb);
+            for (int i = 0; i< ParallelNb; i++)
+            {
+                Label lb = new Label();
+                lb.Text = string.Format("Thread {0}", i);
+                lb.Location = new Point(500, 30 + 10 * i);
+                lb.Size = new System.Drawing.Size(150, 10);
+                lb.Show();
+                listLabel.Add(lb);
+                
+              //  this.Controls.Add(lb);
+                this.Controls.Add(listLabel[i]);
+            }
+            
             this.textBox3.Text = "Simulation Start\r\n";
-            UInt16 parallelRunNb = Convert.ToUInt16(this.comboBox1.Text);
-            Controllor.Model.simulationHouse = new Model.SimulationHouse(parallelRunNb, ref view);
-            //for (int i = 0; i < parallelRunNb; i++)
-            //{
-            //    Controllor.Model.simulationHouse.simulations[i].updateCurrentStatusDelegate = new Model.Simulation.UpdateCurrentStatusDelegate(updateCurrentStatus);
-            //    Controllor.Model.simulationHouse.simulations[i].updateTradeLogParallelDelegate = new Model.Simulation.UpdateTradeLogParallelDelegate(updateTradeLogParallelTextBox);
-                                                                
-           // }
+            
+            Controllor.Model.simulationHouse = new Model.SimulationHouse(ParallelNb, ref view);
+ 
             Controllor.startParallelSimulation(ref Controllor.Model.simulationHouse);
         }
 
         public void updateCurrentStatus(string value, UInt16 index)
         {
-            if (this.label2.InvokeRequired)
-            {                
-                this.Invoke(Controllor.Model.simulationHouse.simulations[0].updateCurrentStatusDelegate, new object[] { value, index });
-                this.Invoke(Controllor.Model.simulationHouse.simulations[1].updateCurrentStatusDelegate, new object[] { value, index });
-                this.Invoke(Controllor.Model.simulationHouse.simulations[2].updateCurrentStatusDelegate, new object[] { value, index });
+            if (this.listLabel[index].InvokeRequired)
+            {               
+                foreach( Simulation s in Controllor.Model.simulationHouse.simulations)
+                {
+                    this.Invoke(s.updateCurrentStatusDelegate, new object[] { value, index });
+                }
+
             }
             else
             {
-                switch (index)
-                {
-                    case 0:
-                        this.label2.Text = value;
-                        break;
-                    case 1:
-                        this.label3.Text = value;
-                        break;
-                    case 2:
-                        this.label4.Text = value;
-                        break;
-                }     
+                listLabel[index].Text = value;
+                //switch (index)
+                //{
+                //    case 0:
+                //        this.label2.Text = value;
+                //        break;
+                //    case 1:
+                //        this.label3.Text = value;
+                //        break;
+                //    case 2:
+                //        this.label4.Text = value;
+                //        break;
+                //}
             }
            
         }

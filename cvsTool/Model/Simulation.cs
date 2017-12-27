@@ -14,8 +14,7 @@ namespace cvsTool.Model
 {
     public class Simulation
     {
-        private string name;
-        public DataTable simulateDt;
+        private string name;        
         public UInt64 tradeTimes;
 
         public DateTime currentTime;
@@ -43,10 +42,9 @@ namespace cvsTool.Model
 
         public delegate void UpdateTradeLogParallelDelegate(string value);
         public UpdateTradeLogParallelDelegate updateTradeLogParallelDelegate;
-        public Simulation(string argName, ref DataTable argDataTable, ref TestParam argTestParam, ref PersonForm view)
+        public Simulation(string argName, ref TestParam argTestParam, ref PersonForm view)
         {
-            name = argName;
-            simulateDt = argDataTable;
+            name = argName;            
             testParam = argTestParam;
             currentStatus = PositionStatus.None;
             currentPosition.closePrice = 0.0;
@@ -83,7 +81,7 @@ namespace cvsTool.Model
         }
         private void runSimulate()
         {
-            int end = simulateDt.Rows.Count;
+            int end = SimulationHouse.shareTable.Rows.Count;
             
             for (int i = 200; i < end; i++)
             {
@@ -91,7 +89,7 @@ namespace cvsTool.Model
 
                 if (i % 10000 == 0)
                 {
-                    string ss = String.Format("Thread {0} : {1:yyyy-MM-dd HH:mm:ss}", name, simulateDt.Rows[i]["DateTime"]);
+                    string ss = String.Format("Thread {0} : {1:yyyy-MM-dd HH:mm:ss}", name, SimulationHouse.shareTable.Rows[i]["DateTime"]);
                     updateCurrentStatusDelegate(ss, Convert.ToUInt16(name));
                 }
                 
@@ -110,8 +108,7 @@ namespace cvsTool.Model
                         runCloseShortStrategy(i);
                         break;
                 }
-            }
-           
+            }           
         }
 
         private bool openPositionCondition(int i)
@@ -127,7 +124,7 @@ namespace cvsTool.Model
 
         private DateTime getCurrentTime(int i)
         {
-            DateTime ret = Convert.ToDateTime(simulateDt.Rows[i]["DateTime"]);
+            DateTime ret = Convert.ToDateTime(SimulationHouse.shareTable.Rows[i]["DateTime"]);
             return ret;
         }
 
@@ -203,7 +200,7 @@ namespace cvsTool.Model
         private void closeShortPosition(int index)
         {
             this.tradeTimes++;
-            this.currentPosition.closeTime = (DateTime)simulateDt.Rows[index]["DateTime"];
+            this.currentPosition.closeTime = (DateTime)SimulationHouse.shareTable.Rows[index]["DateTime"];
 
             this.currentPosition.closePrice = currentPrice;
             this.currentPosition.profit = (currentPosition.openPrice - currentPosition.closePrice) * 10000;
@@ -213,7 +210,7 @@ namespace cvsTool.Model
         private void closeLongPosition(int index)
         {
             this.tradeTimes++;
-            this.currentPosition.closeTime = (DateTime)simulateDt.Rows[index]["DateTime"];
+            this.currentPosition.closeTime = (DateTime)SimulationHouse.shareTable.Rows[index]["DateTime"];
 
             this.currentPosition.closePrice = currentPrice;
 
@@ -230,7 +227,7 @@ namespace cvsTool.Model
         }
         private void monitorPriceTrend(int index)
         {
-            currentPrice = (double)simulateDt.Rows[index]["BidClose"];
+            currentPrice = (double)SimulationHouse.shareTable.Rows[index]["BidClose"];
             lastMA = currentMA;
 
             currentMA.M5 = MA(index, 5);
@@ -331,7 +328,7 @@ namespace cvsTool.Model
             this.currentPosition.status = PositionStatus.Short;
             this.currentPosition.index = index;
             this.currentPosition.openPrice = currentPrice;
-            this.currentPosition.openTime = (DateTime)simulateDt.Rows[index]["DateTime"];
+            this.currentPosition.openTime = (DateTime)SimulationHouse.shareTable.Rows[index]["DateTime"];
             currentStatus = this.currentPosition.status;
         }
 
@@ -341,7 +338,7 @@ namespace cvsTool.Model
             this.currentPosition.status = PositionStatus.Long;
             this.currentPosition.index = index;
             this.currentPosition.openPrice = currentPrice;
-            this.currentPosition.openTime = (DateTime)simulateDt.Rows[index]["DateTime"];
+            this.currentPosition.openTime = (DateTime)SimulationHouse.shareTable.Rows[index]["DateTime"];
             currentStatus = this.currentPosition.status;
 
         }
@@ -352,7 +349,7 @@ namespace cvsTool.Model
 
             for (int i = 0; i < nb; i++)
             {
-                returnValue += (double)simulateDt.Rows[index - i]["BidClose"];
+                returnValue += (double)SimulationHouse.shareTable.Rows[index - i]["BidClose"];
             }
             returnValue = returnValue / nb;
             return returnValue;
