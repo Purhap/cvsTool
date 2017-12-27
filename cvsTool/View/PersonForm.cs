@@ -8,14 +8,11 @@ using System.Text;
 using System.Windows.Forms;
 using cvsTool.Controllor;
 using System.Runtime.InteropServices;
-
-
+using cvsTool.Model;
 
 namespace cvsTool.View
 {
- 
-
-    public partial class PersonForm : Form
+     public partial class PersonForm : Form
    {
         [DllImport("kernel32.dll")]
         public static extern uint SetThreadExecutionState(uint esFlags);
@@ -38,12 +35,18 @@ namespace cvsTool.View
         private TextBox textBox3;
         private RichTextBox richTextBox1;
         private Button button4;
+        private Button button5;
+        private ComboBox comboBox1;
+        private Label label2;
+        private Label label3;
+        private Label label4;
         public Chart chartForm;
+        public PersonForm view;
         
         public PersonForm()
         {
             InitializeComponent();
-           
+            view = this;
 
         }
 
@@ -87,6 +90,11 @@ namespace cvsTool.View
             this.textBox3 = new System.Windows.Forms.TextBox();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
             this.button4 = new System.Windows.Forms.Button();
+            this.button5 = new System.Windows.Forms.Button();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // textBox1
@@ -149,9 +157,9 @@ namespace cvsTool.View
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(513, 45);
+            this.button3.Location = new System.Drawing.Point(774, 9);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(130, 23);
+            this.button3.Size = new System.Drawing.Size(102, 32);
             this.button3.TabIndex = 7;
             this.button3.Text = "Start Simulate";
             this.button3.UseVisualStyleBackColor = true;
@@ -162,15 +170,16 @@ namespace cvsTool.View
             this.textBox3.Location = new System.Drawing.Point(513, 74);
             this.textBox3.Multiline = true;
             this.textBox3.Name = "textBox3";
-            this.textBox3.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox3.Size = new System.Drawing.Size(374, 79);
+            this.textBox3.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.textBox3.Size = new System.Drawing.Size(490, 137);
             this.textBox3.TabIndex = 8;
+            this.textBox3.WordWrap = false;
             // 
             // richTextBox1
             // 
             this.richTextBox1.Location = new System.Drawing.Point(522, 252);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(383, 96);
+            this.richTextBox1.Size = new System.Drawing.Size(481, 96);
             this.richTextBox1.TabIndex = 9;
             this.richTextBox1.Text = "";
             // 
@@ -184,9 +193,78 @@ namespace cvsTool.View
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
+            // button5
+            // 
+            this.button5.Location = new System.Drawing.Point(901, 9);
+            this.button5.Name = "button5";
+            this.button5.Size = new System.Drawing.Size(102, 32);
+            this.button5.TabIndex = 11;
+            this.button5.Text = "Start Parallel Simulation";
+            this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16"});
+            this.comboBox1.Location = new System.Drawing.Point(901, 47);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(102, 20);
+            this.comboBox1.TabIndex = 13;
+            this.comboBox1.Text = "3";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(511, 9);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(41, 12);
+            this.label2.TabIndex = 14;
+            this.label2.Text = "label2";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(511, 32);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(41, 12);
+            this.label3.TabIndex = 15;
+            this.label3.Text = "label3";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(511, 55);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(41, 12);
+            this.label4.TabIndex = 16;
+            this.label4.Text = "label4";
+            // 
             // PersonForm
             // 
-            this.ClientSize = new System.Drawing.Size(951, 371);
+            this.ClientSize = new System.Drawing.Size(1038, 371);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.textBox3);
@@ -260,6 +338,7 @@ namespace cvsTool.View
             if (this.textBox3.InvokeRequired)
             {
                 this.Invoke(Controllor.Model.simulator.updateCurrentTickDelegate, new object[] { value });
+               
             }
             else
             {
@@ -270,6 +349,7 @@ namespace cvsTool.View
             }
 
         }
+
 
         private void updateTradeLogTextBox(string value)
         {
@@ -285,25 +365,27 @@ namespace cvsTool.View
             }
            
         }
+        public void updateTradeLogParallelTextBox(string value)
+        {
+            if (this.textBox3.InvokeRequired)
+            {              
+                this.Invoke(Controllor.Model.simulationHouse.simulations[0].updateTradeLogParallelDelegate, new object[] { value });
+                //this.Invoke(Controllor.Model.simulationHouse.simulations[1].updateTradeLogParallelDelegate, new object[] { value });
+                //this.Invoke(Controllor.Model.simulationHouse.simulations[2].updateTradeLogParallelDelegate, new object[] { value });
+
+            }
+            else
+            {
+                this.textBox3.Text += value;
+                this.textBox3.Select(this.richTextBox1.TextLength, 0);//光标定位到文本最后
+                this.textBox3.ScrollToCaret();
+            }
+
+        }
+        
 
         private void button4_Click(object sender, EventArgs e)
         {
-            //DataTable dis = new DataTable();
-            //DataTable raw = new DataTable();
-            //DateTime d1 = DateTime.Now;
-            //Model.Csv.ReadToDataTable(raw, "EUR2USD.csv");
-            //DateTime d2 = DateTime.Now;
-            //dis = Model.Csv.Distinct(raw,"DateTime");
-            //DateTime d3 = DateTime.Now;
-            //Model.Csv.SaveCSV(dis, "dis.csv");
-            //DateTime d4 = DateTime.Now;
-            //string ss;
-            //ss = string.Format("step1:{0:HH:mm:ss} ", d1);
-            //ss +=string.Format("step2:{0:HH:mm:ss} ", d2);
-            //ss += string.Format("step3:{0:HH:mm:ss} ", d3);
-            //ss += string.Format("step4:{0:HH:mm:ss} ", d4);
-            //MessageBox.Show(ss);
-
             DateTime d1 = DateTime.Now;
             Model.Csv.cleanfile("EUR2USD.csv", "EUR2USD1.csv");
             DateTime d2 = DateTime.Now;
@@ -314,5 +396,45 @@ namespace cvsTool.View
 
         }
 
+        private void button5_Click(object sender, EventArgs e)
+        {
+            DisableStandby();
+            this.textBox3.Text = "Simulation Start\r\n";
+            UInt16 parallelRunNb = Convert.ToUInt16(this.comboBox1.Text);
+            Controllor.Model.simulationHouse = new Model.SimulationHouse(parallelRunNb, ref view);
+            //for (int i = 0; i < parallelRunNb; i++)
+            //{
+            //    Controllor.Model.simulationHouse.simulations[i].updateCurrentStatusDelegate = new Model.Simulation.UpdateCurrentStatusDelegate(updateCurrentStatus);
+            //    Controllor.Model.simulationHouse.simulations[i].updateTradeLogParallelDelegate = new Model.Simulation.UpdateTradeLogParallelDelegate(updateTradeLogParallelTextBox);
+                                                                
+           // }
+            Controllor.startParallelSimulation(ref Controllor.Model.simulationHouse);
+        }
+
+        public void updateCurrentStatus(string value, UInt16 index)
+        {
+            if (this.label2.InvokeRequired)
+            {                
+                this.Invoke(Controllor.Model.simulationHouse.simulations[0].updateCurrentStatusDelegate, new object[] { value, index });
+                this.Invoke(Controllor.Model.simulationHouse.simulations[1].updateCurrentStatusDelegate, new object[] { value, index });
+                this.Invoke(Controllor.Model.simulationHouse.simulations[2].updateCurrentStatusDelegate, new object[] { value, index });
+            }
+            else
+            {
+                switch (index)
+                {
+                    case 0:
+                        this.label2.Text = value;
+                        break;
+                    case 1:
+                        this.label3.Text = value;
+                        break;
+                    case 2:
+                        this.label4.Text = value;
+                        break;
+                }     
+            }
+           
+        }
     }
 }

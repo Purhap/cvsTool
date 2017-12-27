@@ -66,11 +66,14 @@
     <Compile Include="Controllor\PersonControllor.cs" />
     <Compile Include="Controllor\ResponseListener.cs" />
     <Compile Include="Controllor\SessionStatusListener.cs" />
+    <Compile Include="Model\BaseLibrary.cs" />
     <Compile Include="Model\Csv.cs" />
     <Compile Include="Model\LoginParams.cs" />
     <Compile Include="Model\Params.cs" />
     <Compile Include="Model\Person.cs" />
     <Compile Include="Model\SampleParams.cs" />
+    <Compile Include="Model\Simulation.cs" />
+    <Compile Include="Model\SimulationHouse.cs" />
     <Compile Include="Model\Simulator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

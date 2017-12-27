@@ -21,10 +21,9 @@ namespace cvsTool.Model
             set { _id = value; OnPropertyChanged("Name"); }
         }
         public Csv Csv;
-
+        public SimulationHouse simulationHouse;
         public Simulator simulator;
-
-
+                
         public Person()
         {
             Csv = new Csv(_name);

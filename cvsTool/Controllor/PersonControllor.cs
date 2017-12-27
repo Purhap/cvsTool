@@ -21,6 +21,8 @@ namespace cvsTool.Controllor
         public DataTable InstrumentDT;
         private Thread getHistoryThread;
         private Thread simulateThread;
+        private Thread parallelSimulationThread;
+       
 
         public delegate void UpdateUIDelegate(int value, int count);
         public UpdateUIDelegate updateProcessDelegate;
@@ -37,7 +39,7 @@ namespace cvsTool.Controllor
             this.View.Controllor = this;
 
             this.InstrumentDT = Model.Csv.dataTable;
-                        
+           
         }
 
         public void UpdatePerson()
@@ -146,6 +148,7 @@ namespace cvsTool.Controllor
             simulateThread = new Thread(new ThreadStart(Model.simulator.startSimulate));
             simulateThread.Start();
         }
+        
         public void stopGetHistroyPrice()
         {
             if(getHistoryThread!=null)
@@ -269,5 +272,10 @@ namespace cvsTool.Controllor
             } while (dtFirst > dtFrom);
         }
 
+        internal void startParallelSimulation(ref SimulationHouse argSimulationHouse)
+        {
+            parallelSimulationThread = new Thread(new ThreadStart(argSimulationHouse.runParallelSimulation));
+            parallelSimulationThread.Start();
+        }
     }
 }
