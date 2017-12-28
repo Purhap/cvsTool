@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using static cvsTool.Model.BaseLibrary;
 
 namespace cvsTool.Model
@@ -28,17 +30,10 @@ namespace cvsTool.Model
                    
         }
         public void runParallelSimulation()
-        {
+        {       
             loadDataTable();
-        //    for (int i = 0; i < parallelNum; i++)
-       //     {
-        //        simulations.Add(new Simulation(i.ToString(), ref shareTable, ref tp[i], ref view));
-         //   }
-           Parallel.For(0, parallelNum, new ParallelOptions() { MaxDegreeOfParallelism = 2 }, i => { createSimulationAndRun(i); });
-          //  Parallel.Invoke(() => { simulations[0].runOnceSimulation(); },
-           //                   () => { simulations[1].runOnceSimulation(); });
-
-          //  simulations[0].runOnceSimulation();
+            Parallel.For(0, parallelNum, new ParallelOptions() { MaxDegreeOfParallelism = 2 }, i => { createSimulationAndRun(i); });
+   
         }
         private void createSimulationAndRun(int i)
         {
@@ -69,8 +64,11 @@ namespace cvsTool.Model
         private void loadDataTable()
         {
             Csv.ReadToDataTable(shareTable, "EUR2USD.csv");
-            shareTable.DefaultView.Sort = "DateTime ASC";
-            shareTable = shareTable.DefaultView.ToTable();
+            var query = shareTable.AsEnumerable().OrderBy(r => r["DateTime"]);
+            shareTable = query.CopyToDataTable();
+                        
+          //  shareTable.DefaultView.Sort = "DateTime ASC";
+           // shareTable = shareTable.DefaultView.ToTable();            
         }
     }
 }

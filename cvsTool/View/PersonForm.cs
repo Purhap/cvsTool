@@ -376,9 +376,7 @@ namespace cvsTool.View
                 lb.Location = new Point(500, 30 + 10 * i);
                 lb.Size = new System.Drawing.Size(150, 10);
                 lb.Show();
-                listLabel.Add(lb);
-                
-              //  this.Controls.Add(lb);
+                listLabel.Add(lb);                
                 this.Controls.Add(listLabel[i]);
             }
             
