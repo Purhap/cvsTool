@@ -15,16 +15,20 @@ namespace cvsTool.Model
     public class SimulationHouse
     {
         private UInt16 parallelNum;
+        private UInt16 startIndex;
+        private UInt16 endIndex;
         public List <Simulation> simulations;
         public static DataTable shareTable;
         public static TestParam[] tp;
         public PersonForm view;
-        public SimulationHouse(UInt16 artParallelNum, ref PersonForm argView)
+        public SimulationHouse(UInt16 artParallelNum,UInt16 argStartIndex, UInt16 argEndIndex, ref PersonForm argView)
         {            
             parallelNum = artParallelNum;
+            startIndex = argStartIndex;
+            endIndex = argEndIndex;
             view = argView;
             shareTable = new DataTable();
-            simulations = new List<Simulation>(400);//,parallelNum>;
+            simulations = new List<Simulation>(1000);
            
             loadTestParams();
                    
@@ -32,8 +36,17 @@ namespace cvsTool.Model
         public void runParallelSimulation()
         {       
             loadDataTable();
-            Parallel.For(0, parallelNum, new ParallelOptions() { MaxDegreeOfParallelism = 2 }, i => { createSimulationAndRun(i); });
-   
+            try
+            {
+                Parallel.For(startIndex, endIndex, new ParallelOptions() { MaxDegreeOfParallelism = parallelNum }, i => { createSimulationAndRun(i); });
+            }
+            catch (AggregateException err)
+            {
+                foreach (Exception item in err.InnerExceptions)
+                {
+                    Console.WriteLine("exception: {0}{1} from : {2}{3} content:{4}",item.InnerException.GetType(), Environment.NewLine, item.InnerException.Source, Environment.NewLine, item.InnerException.Message);
+                }
+            }
         }
         private void createSimulationAndRun(int i)
         {
@@ -45,12 +58,12 @@ namespace cvsTool.Model
         private void loadTestParams()
         {
             UInt32 index = 0;
-            tp = new TestParam[500];
-            for (int i = 1; i < 3; i++)
+            tp = new TestParam[1000];
+            for (int i = 1; i < 10; i++)
             {
-                for (int j = 1; j < 3; j++)
+                for (int j = 1; j < 10; j++)
                 {
-                    for (int k = 0; k < 3; k++)
+                    for (int k = 0; k < 10; k++)
                     {
                         tp[index].k1 = i;
                         tp[index].k2 = 0.0001 * j;

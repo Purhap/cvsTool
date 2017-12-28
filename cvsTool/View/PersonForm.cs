@@ -39,7 +39,11 @@ namespace cvsTool.View
         private ComboBox comboBox1;
         public Chart chartForm;
         public PersonForm view;
-
+        private ComboBox comboBox2;
+        private Label label2;
+        private ComboBox comboBox3;
+        private Label label3;
+        private Label label4;
         private List<Label> listLabel;
         
         public PersonForm()
@@ -51,6 +55,8 @@ namespace cvsTool.View
             
         }
         private UInt16 ParallelNb;
+        private UInt16 simulationStartNb;
+        private UInt16 simulationEndNb;
         private TextBox textBox1;
         private TextBox textBox2;
         private Button button1;
@@ -93,6 +99,11 @@ namespace cvsTool.View
             this.button4 = new System.Windows.Forms.Button();
             this.button5 = new System.Windows.Forms.Button();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // textBox1
@@ -155,7 +166,7 @@ namespace cvsTool.View
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(757, 36);
+            this.button3.Location = new System.Drawing.Point(688, 36);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(102, 32);
             this.button3.TabIndex = 7;
@@ -222,15 +233,92 @@ namespace cvsTool.View
             "14",
             "15",
             "16"});
-            this.comboBox1.Location = new System.Drawing.Point(901, 47);
+            this.comboBox1.Location = new System.Drawing.Point(952, 46);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(102, 20);
+            this.comboBox1.Size = new System.Drawing.Size(51, 20);
             this.comboBox1.TabIndex = 13;
             this.comboBox1.Text = "3";
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8"});
+            this.comboBox2.Location = new System.Drawing.Point(952, 10);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(51, 20);
+            this.comboBox2.TabIndex = 14;
+            this.comboBox2.Text = "2";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(863, 13);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(83, 12);
+            this.label2.TabIndex = 15;
+            this.label2.Text = "Max Parallel ";
+            // 
+            // comboBox3
+            // 
+            this.comboBox3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.comboBox3.FormattingEnabled = true;
+            this.comboBox3.Items.AddRange(new object[] {
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16"});
+            this.comboBox3.Location = new System.Drawing.Point(851, 46);
+            this.comboBox3.Name = "comboBox3";
+            this.comboBox3.Size = new System.Drawing.Size(56, 20);
+            this.comboBox3.TabIndex = 16;
+            this.comboBox3.Text = "0";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(808, 50);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(29, 12);
+            this.label3.TabIndex = 17;
+            this.label3.Text = "From";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(929, 50);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(17, 12);
+            this.label4.TabIndex = 18;
+            this.label4.Text = "To";
             // 
             // PersonForm
             // 
             this.ClientSize = new System.Drawing.Size(1164, 371);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.comboBox3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.comboBox2);
             this.Controls.Add(this.comboBox1);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.button4);
@@ -338,9 +426,6 @@ namespace cvsTool.View
             if (this.textBox3.InvokeRequired)
             {              
                 this.Invoke(Controllor.Model.simulationHouse.simulations[0].updateTradeLogParallelDelegate, new object[] { value });
-                //this.Invoke(Controllor.Model.simulationHouse.simulations[1].updateTradeLogParallelDelegate, new object[] { value });
-                //this.Invoke(Controllor.Model.simulationHouse.simulations[2].updateTradeLogParallelDelegate, new object[] { value });
-
             }
             else
             {
@@ -367,13 +452,16 @@ namespace cvsTool.View
         private void button5_Click(object sender, EventArgs e)
         {
             DisableStandby();
-            ParallelNb = Convert.ToUInt16(this.comboBox1.Text);
+            ParallelNb = Convert.ToUInt16(this.comboBox2.Text);
             listLabel = new List<Label>(ParallelNb);
+            simulationStartNb = Convert.ToUInt16(this.comboBox3.Text);
+            simulationEndNb = Convert.ToUInt16(this.comboBox1.Text);
+
             for (int i = 0; i< ParallelNb; i++)
             {
                 Label lb = new Label();
-                lb.Text = string.Format("Thread {0}", i);
-                lb.Location = new Point(500, 30 + 10 * i);
+                lb.Text = string.Format("Thread {0}:", i);
+                lb.Location = new Point(500, 30 + 15 * i);
                 lb.Size = new System.Drawing.Size(150, 10);
                 lb.Show();
                 listLabel.Add(lb);                
@@ -382,36 +470,25 @@ namespace cvsTool.View
             
             this.textBox3.Text = "Simulation Start\r\n";
             
-            Controllor.Model.simulationHouse = new Model.SimulationHouse(ParallelNb, ref view);
+            Controllor.Model.simulationHouse = new Model.SimulationHouse(ParallelNb, simulationStartNb, simulationEndNb,ref view);
  
             Controllor.startParallelSimulation(ref Controllor.Model.simulationHouse);
         }
 
         public void updateCurrentStatus(string value, UInt16 index)
         {
-            if (this.listLabel[index].InvokeRequired)
+            UInt16 labelIndex = Convert.ToUInt16( index % ParallelNb);
+            if (this.listLabel[labelIndex].InvokeRequired)
             {               
                 foreach( Simulation s in Controllor.Model.simulationHouse.simulations)
                 {
-                    this.Invoke(s.updateCurrentStatusDelegate, new object[] { value, index });
+                    this.Invoke(s.updateCurrentStatusDelegate, new object[] { value, labelIndex });
                 }
 
             }
             else
             {
-                listLabel[index].Text = value;
-                //switch (index)
-                //{
-                //    case 0:
-                //        this.label2.Text = value;
-                //        break;
-                //    case 1:
-                //        this.label3.Text = value;
-                //        break;
-                //    case 2:
-                //        this.label4.Text = value;
-                //        break;
-                //}
+                listLabel[labelIndex].Text = value;           
             }
            
         }
