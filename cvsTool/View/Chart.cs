@@ -20,7 +20,7 @@ namespace cvsTool.View
         private DataTable drawDt;
         DateTime dt1;
         DateTime dt2;
-        private Graphics g;
+        
         System.Windows.Forms.Timer chartTimer = new System.Windows.Forms.Timer();
         public Chart(PersonForm p, PersonControllor _controllor)
         {

@@ -8,12 +8,29 @@ namespace cvsTool.Model
 {
     public class BaseLibrary
     {
+        public struct TestParamsRange
+        {
+            public UInt16 k1;// hold time
+            public double k2; //stop loss value
+            public double k3; //wave ratio
+            public double k4;
+
+            public UInt16 k1_End;// hold time
+            public double k2_End; //stop loss value
+            public double k3_End; //wave ratio
+            public double k4_End;
+
+            public UInt16 k1_Step;// hold time
+            public double k2_Step; //stop loss value
+            public double k3_Step; //wave ratio
+            public double k4_Step;
+        }
         public struct TestParam
         {
-            public int k1;// hold time
+            public UInt16 k1;// hold time
             public double k2; //stop loss value
-            public double k3; //wate ratio
-            public double k4;
+            public double k3; //wave ratio
+            public double k4;           
         }
         public enum PositionStatus
         {
@@ -32,16 +49,35 @@ namespace cvsTool.Model
             public double M5;
             public double M10;
             public double M20;
+            public double M30;
             public double M60;
             public double M120;
+            public double M240;
+        }
+        public class MA
+        {
+            public UInt16 id;
+            public UInt16 elementNumber;
+            public double sum;
+            public double ma;
+            
+            public MA(UInt16 nb)
+            {
+                id = nb;
+                elementNumber = 0;
+                sum = 0;
+                ma = 0;
+            }
         }
         public struct MA_TREND
         {
             public double M5_SlopeRatio;
             public double M10_SlopeRatio;
             public double M20_SlopeRatio;
+            public double M30_SlopeRatio;
             public double M60_SlopeRatio;
             public double M120_SlopeRatio;
+            public double M240_SlopeRatio;
         }
 
         public struct PostionStruct

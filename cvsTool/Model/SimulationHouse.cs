@@ -14,24 +14,29 @@ namespace cvsTool.Model
 {
     public class SimulationHouse
     {
+        public UInt32 currentThreadNum;
         private UInt16 parallelNum;
         private UInt16 startIndex;
         private UInt16 endIndex;
+        public TestParamsRange tpr;
         public List <Simulation> simulations;
         public static DataTable shareTable;
-        public static TestParam[] tp;
+        public List<TestParam> listTestParams ;
         public PersonForm view;
-        public SimulationHouse(UInt16 artParallelNum,UInt16 argStartIndex, UInt16 argEndIndex, ref PersonForm argView)
+        public SimulationHouse(UInt16 artParallelNum,UInt16 argStartIndex, UInt16 argEndIndex, TestParamsRange argTpr, ref PersonForm argView)
         {            
             parallelNum = artParallelNum;
             startIndex = argStartIndex;
             endIndex = argEndIndex;
+            tpr = argTpr;
             view = argView;
             shareTable = new DataTable();
             simulations = new List<Simulation>(1000);
-           
+            listTestParams = new List<TestParam>();
             loadTestParams();
-                   
+            currentThreadNum = 0;
+
+
         }
         public void runParallelSimulation()
         {       
@@ -50,27 +55,30 @@ namespace cvsTool.Model
         }
         private void createSimulationAndRun(int i)
         {
-            Simulation oneSimulation = new Simulation(i.ToString(), ref tp[i], ref view);
+            Simulation oneSimulation = new Simulation(i.ToString(), listTestParams[i], ref view, ref currentThreadNum);
             simulations.Add(oneSimulation);
             oneSimulation.runOnceSimulation();
         }
 
         private void loadTestParams()
-        {
-            UInt32 index = 0;
-            tp = new TestParam[1000];
-            for (int i = 1; i < 10; i++)
+        {         
+            for (UInt16 i = tpr.k1; i < tpr.k1_End;)
             {
-                for (int j = 1; j < 10; j++)
+                for (double j = tpr.k2; j < tpr.k2_End;)
                 {
-                    for (int k = 0; k < 10; k++)
+                    for (double n = tpr.k3; n < tpr.k3_End;)
                     {
-                        tp[index].k1 = i;
-                        tp[index].k2 = 0.0001 * j;
-                        tp[index].k3 = 0.0001 * k;
-                        index++;
+                        TestParam tp = new TestParam();
+                        tp.k1 = i;
+                        tp.k2 = j;
+                        tp.k3 = n;
+                        listTestParams.Add(tp);
+                  
+                        n += tpr.k3_Step;
                     }
+                    j += tpr.k2_Step;
                 }
+                i += tpr.k1_Step;
             }            
         }
 

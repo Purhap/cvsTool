@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using cvsTool.Controllor;
 using System.Runtime.InteropServices;
 using cvsTool.Model;
+using static cvsTool.Model.BaseLibrary;
 
 namespace cvsTool.View
 {
@@ -44,6 +45,24 @@ namespace cvsTool.View
         private ComboBox comboBox3;
         private Label label3;
         private Label label4;
+        private TextBox textBox4;
+        private TextBox textBox5;
+        private TextBox textBox6;
+        private Label label5;
+        private GroupBox groupBox1;
+        private GroupBox groupBox2;
+        private TextBox textBox16;
+        private TextBox textBox17;
+        private TextBox textBox18;
+        private Label label20;
+        private TextBox textBox12;
+        private TextBox textBox13;
+        private TextBox textBox14;
+        private Label label16;
+        private TextBox textBox8;
+        private TextBox textBox9;
+        private TextBox textBox10;
+        private Label label12;
         private List<Label> listLabel;
         
         public PersonForm()
@@ -104,6 +123,26 @@ namespace cvsTool.View
             this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.textBox4 = new System.Windows.Forms.TextBox();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.textBox8 = new System.Windows.Forms.TextBox();
+            this.textBox9 = new System.Windows.Forms.TextBox();
+            this.textBox10 = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.textBox12 = new System.Windows.Forms.TextBox();
+            this.textBox13 = new System.Windows.Forms.TextBox();
+            this.textBox14 = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.textBox16 = new System.Windows.Forms.TextBox();
+            this.textBox17 = new System.Windows.Forms.TextBox();
+            this.textBox18 = new System.Windows.Forms.TextBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // textBox1
@@ -166,7 +205,7 @@ namespace cvsTool.View
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(688, 36);
+            this.button3.Location = new System.Drawing.Point(368, 28);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(102, 32);
             this.button3.TabIndex = 7;
@@ -176,17 +215,17 @@ namespace cvsTool.View
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(688, 73);
+            this.textBox3.Location = new System.Drawing.Point(688, 320);
             this.textBox3.Multiline = true;
             this.textBox3.Name = "textBox3";
             this.textBox3.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox3.Size = new System.Drawing.Size(444, 137);
+            this.textBox3.Size = new System.Drawing.Size(444, 89);
             this.textBox3.TabIndex = 8;
             this.textBox3.WordWrap = false;
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(688, 252);
+            this.richTextBox1.Location = new System.Drawing.Point(688, 423);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.Size = new System.Drawing.Size(444, 96);
             this.richTextBox1.TabIndex = 9;
@@ -204,9 +243,9 @@ namespace cvsTool.View
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(1020, 35);
+            this.button5.Location = new System.Drawing.Point(271, 20);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(102, 32);
+            this.button5.Size = new System.Drawing.Size(167, 53);
             this.button5.TabIndex = 11;
             this.button5.Text = "Start Parallel Simulation";
             this.button5.UseVisualStyleBackColor = true;
@@ -233,7 +272,7 @@ namespace cvsTool.View
             "14",
             "15",
             "16"});
-            this.comboBox1.Location = new System.Drawing.Point(952, 46);
+            this.comboBox1.Location = new System.Drawing.Point(185, 55);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(51, 20);
             this.comboBox1.TabIndex = 13;
@@ -251,7 +290,7 @@ namespace cvsTool.View
             "6",
             "7",
             "8"});
-            this.comboBox2.Location = new System.Drawing.Point(952, 10);
+            this.comboBox2.Location = new System.Drawing.Point(184, 25);
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(51, 20);
             this.comboBox2.TabIndex = 14;
@@ -260,11 +299,11 @@ namespace cvsTool.View
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(863, 13);
+            this.label2.Location = new System.Drawing.Point(42, 28);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(83, 12);
+            this.label2.Size = new System.Drawing.Size(119, 12);
             this.label2.TabIndex = 15;
-            this.label2.Text = "Max Parallel ";
+            this.label2.Text = "Max Parallel Thread";
             // 
             // comboBox3
             // 
@@ -287,7 +326,7 @@ namespace cvsTool.View
             "14",
             "15",
             "16"});
-            this.comboBox3.Location = new System.Drawing.Point(851, 46);
+            this.comboBox3.Location = new System.Drawing.Point(84, 55);
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(56, 20);
             this.comboBox3.TabIndex = 16;
@@ -296,7 +335,7 @@ namespace cvsTool.View
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(808, 50);
+            this.label3.Location = new System.Drawing.Point(41, 59);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(29, 12);
             this.label3.TabIndex = 17;
@@ -305,22 +344,202 @@ namespace cvsTool.View
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(929, 50);
+            this.label4.Location = new System.Drawing.Point(162, 59);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(17, 12);
             this.label4.TabIndex = 18;
             this.label4.Text = "To";
             // 
+            // textBox4
+            // 
+            this.textBox4.Location = new System.Drawing.Point(87, 18);
+            this.textBox4.Name = "textBox4";
+            this.textBox4.Size = new System.Drawing.Size(45, 21);
+            this.textBox4.TabIndex = 19;
+            this.textBox4.Text = "1";
+            this.textBox4.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // textBox5
+            // 
+            this.textBox5.Location = new System.Drawing.Point(179, 18);
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(45, 21);
+            this.textBox5.TabIndex = 20;
+            this.textBox5.Text = "10";
+            this.textBox5.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // textBox6
+            // 
+            this.textBox6.Location = new System.Drawing.Point(271, 18);
+            this.textBox6.Name = "textBox6";
+            this.textBox6.Size = new System.Drawing.Size(45, 21);
+            this.textBox6.TabIndex = 21;
+            this.textBox6.Text = "1";
+            this.textBox6.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(40, 22);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(17, 12);
+            this.label5.TabIndex = 23;
+            this.label5.Text = "K1";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.textBox16);
+            this.groupBox1.Controls.Add(this.textBox17);
+            this.groupBox1.Controls.Add(this.textBox18);
+            this.groupBox1.Controls.Add(this.label20);
+            this.groupBox1.Controls.Add(this.textBox12);
+            this.groupBox1.Controls.Add(this.textBox13);
+            this.groupBox1.Controls.Add(this.textBox14);
+            this.groupBox1.Controls.Add(this.label16);
+            this.groupBox1.Controls.Add(this.textBox8);
+            this.groupBox1.Controls.Add(this.textBox9);
+            this.groupBox1.Controls.Add(this.textBox10);
+            this.groupBox1.Controls.Add(this.label12);
+            this.groupBox1.Controls.Add(this.textBox5);
+            this.groupBox1.Controls.Add(this.textBox4);
+            this.groupBox1.Controls.Add(this.textBox6);
+            this.groupBox1.Controls.Add(this.label5);
+            this.groupBox1.Location = new System.Drawing.Point(688, 127);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(438, 175);
+            this.groupBox1.TabIndex = 27;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Test Parameters";
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.label2);
+            this.groupBox2.Controls.Add(this.comboBox1);
+            this.groupBox2.Controls.Add(this.button5);
+            this.groupBox2.Controls.Add(this.label4);
+            this.groupBox2.Controls.Add(this.comboBox2);
+            this.groupBox2.Controls.Add(this.label3);
+            this.groupBox2.Controls.Add(this.comboBox3);
+            this.groupBox2.Location = new System.Drawing.Point(688, 10);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(444, 86);
+            this.groupBox2.TabIndex = 28;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Run Settings";
+            // 
+            // textBox8
+            // 
+            this.textBox8.Location = new System.Drawing.Point(179, 56);
+            this.textBox8.Name = "textBox8";
+            this.textBox8.Size = new System.Drawing.Size(45, 21);
+            this.textBox8.TabIndex = 28;
+            this.textBox8.Text = "0.0010";
+            this.textBox8.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // textBox9
+            // 
+            this.textBox9.Location = new System.Drawing.Point(87, 56);
+            this.textBox9.Name = "textBox9";
+            this.textBox9.Size = new System.Drawing.Size(45, 21);
+            this.textBox9.TabIndex = 27;
+            this.textBox9.Text = "0.0001";
+            this.textBox9.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // textBox10
+            // 
+            this.textBox10.Location = new System.Drawing.Point(271, 56);
+            this.textBox10.Name = "textBox10";
+            this.textBox10.Size = new System.Drawing.Size(45, 21);
+            this.textBox10.TabIndex = 29;
+            this.textBox10.Text = "0.0001";
+            this.textBox10.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(40, 60);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(17, 12);
+            this.label12.TabIndex = 31;
+            this.label12.Text = "K2";
+            // 
+            // textBox12
+            // 
+            this.textBox12.Location = new System.Drawing.Point(179, 94);
+            this.textBox12.Name = "textBox12";
+            this.textBox12.Size = new System.Drawing.Size(45, 21);
+            this.textBox12.TabIndex = 36;
+            this.textBox12.Text = "0.0010";
+            this.textBox12.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // textBox13
+            // 
+            this.textBox13.Location = new System.Drawing.Point(87, 94);
+            this.textBox13.Name = "textBox13";
+            this.textBox13.Size = new System.Drawing.Size(45, 21);
+            this.textBox13.TabIndex = 35;
+            this.textBox13.Text = "0.0001";
+            this.textBox13.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // textBox14
+            // 
+            this.textBox14.Location = new System.Drawing.Point(271, 94);
+            this.textBox14.Name = "textBox14";
+            this.textBox14.Size = new System.Drawing.Size(45, 21);
+            this.textBox14.TabIndex = 37;
+            this.textBox14.Text = "0.0001";
+            this.textBox14.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(40, 98);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(17, 12);
+            this.label16.TabIndex = 39;
+            this.label16.Text = "K3";
+            // 
+            // textBox16
+            // 
+            this.textBox16.Location = new System.Drawing.Point(179, 132);
+            this.textBox16.Name = "textBox16";
+            this.textBox16.Size = new System.Drawing.Size(45, 21);
+            this.textBox16.TabIndex = 44;
+            this.textBox16.Text = "1";
+            this.textBox16.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // textBox17
+            // 
+            this.textBox17.Location = new System.Drawing.Point(87, 132);
+            this.textBox17.Name = "textBox17";
+            this.textBox17.Size = new System.Drawing.Size(45, 21);
+            this.textBox17.TabIndex = 43;
+            this.textBox17.Text = "1";
+            this.textBox17.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // textBox18
+            // 
+            this.textBox18.Location = new System.Drawing.Point(271, 132);
+            this.textBox18.Name = "textBox18";
+            this.textBox18.Size = new System.Drawing.Size(45, 21);
+            this.textBox18.TabIndex = 45;
+            this.textBox18.Text = "1";
+            this.textBox18.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(40, 136);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(17, 12);
+            this.label20.TabIndex = 47;
+            this.label20.Text = "K4";
+            // 
             // PersonForm
             // 
-            this.ClientSize = new System.Drawing.Size(1164, 371);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.comboBox3);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.comboBox2);
-            this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.button5);
+            this.ClientSize = new System.Drawing.Size(1170, 527);
+            this.Controls.Add(this.groupBox2);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.button4);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.textBox3);
@@ -333,6 +552,10 @@ namespace cvsTool.View
             this.Controls.Add(this.textBox2);
             this.Controls.Add(this.textBox1);
             this.Name = "PersonForm";
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -453,38 +676,73 @@ namespace cvsTool.View
         {
             DisableStandby();
             ParallelNb = Convert.ToUInt16(this.comboBox2.Text);
+
+            if (listLabel != null)
+            {
+                foreach (Label l in listLabel)
+                {
+                    this.Controls.Remove(l);
+                }
+            }
+
             listLabel = new List<Label>(ParallelNb);
+                            
+            TestParamsRange tp = new TestParamsRange();
+            tp.k1 = Convert.ToUInt16(this.textBox4.Text);
+            tp.k1_End = Convert.ToUInt16(this.textBox5.Text);
+            tp.k1_Step = Convert.ToUInt16(this.textBox6.Text);
+            tp.k2 = Convert.ToDouble(this.textBox9.Text);
+            tp.k2_End = Convert.ToDouble(this.textBox8.Text);
+            tp.k2_Step = Convert.ToDouble(this.textBox10.Text);
+
+            tp.k3 = Convert.ToDouble(this.textBox13.Text);
+            tp.k3_End = Convert.ToDouble(this.textBox12.Text);
+            tp.k3_Step = Convert.ToDouble(this.textBox14.Text);
+
+            tp.k4 = Convert.ToDouble(this.textBox17.Text);
+            tp.k4_End = Convert.ToDouble(this.textBox16.Text);
+            tp.k4_Step = Convert.ToDouble(this.textBox18.Text);
+
+            UInt32 totalNum = Convert.ToUInt32((tp.k1_End - tp.k1) / tp.k1_Step);
+            totalNum *= Convert.ToUInt32((tp.k2_End - tp.k2) / tp.k2_Step);
+            totalNum *= Convert.ToUInt32((tp.k3_End - tp.k3) / tp.k3_Step);
+
             simulationStartNb = Convert.ToUInt16(this.comboBox3.Text);
             simulationEndNb = Convert.ToUInt16(this.comboBox1.Text);
-
+            if ((simulationStartNb >= totalNum) || (simulationStartNb < 0) || (simulationEndNb > totalNum)||(simulationStartNb >= simulationEndNb))
+            {
+                MessageBox.Show("Start or End Parameter error!");
+                return;
+            }
             for (int i = 0; i< ParallelNb; i++)
             {
                 Label lb = new Label();
                 lb.Text = string.Format("Thread {0}:", i);
                 lb.Location = new Point(500, 30 + 15 * i);
                 lb.Size = new System.Drawing.Size(150, 10);
-                lb.Show();
-                listLabel.Add(lb);                
-                this.Controls.Add(listLabel[i]);
+                listLabel.Add(lb);
+                this.Controls.Add(listLabel[i]);                
             }
             
-            this.textBox3.Text = "Simulation Start\r\n";
-            
-            Controllor.Model.simulationHouse = new Model.SimulationHouse(ParallelNb, simulationStartNb, simulationEndNb,ref view);
+            this.textBox3.Text += string.Format("{0:yyyy-MM-dd HH:mm:ss}", DateTime.Now)+" Simulation Start\r\n";
+            this.textBox3.Text += "TradeTimes, Profits, Good, Bad, K1, K2, K3, Thread ID,Time Cost, File Name\r\n";
+            Controllor.Model.simulationHouse = new Model.SimulationHouse(ParallelNb, simulationStartNb, simulationEndNb,tp,ref view);
  
             Controllor.startParallelSimulation(ref Controllor.Model.simulationHouse);
+            
+            
         }
 
         public void updateCurrentStatus(string value, UInt16 index)
         {
             UInt16 labelIndex = Convert.ToUInt16( index % ParallelNb);
             if (this.listLabel[labelIndex].InvokeRequired)
-            {               
-                foreach( Simulation s in Controllor.Model.simulationHouse.simulations)
+            {
+                for (int i = 0; i < Controllor.Model.simulationHouse.currentThreadNum; i++)
                 {
-                    this.Invoke(s.updateCurrentStatusDelegate, new object[] { value, labelIndex });
+                   this.Invoke(Controllor.Model.simulationHouse.simulations[i].updateCurrentStatusDelegate, new object[] { value, labelIndex });
                 }
-
+                               
             }
             else
             {

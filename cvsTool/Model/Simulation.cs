@@ -25,6 +25,7 @@ namespace cvsTool.Model
         private UInt64 badTradeTimes;
         private UInt64 goodTradeTimes;
 
+        public List<MA> MAs; //5,10,20,30,60,120,240
         public UInt64 simulationIndex;
         private PositionStatus currentStatus;
         private PostionStruct currentPosition;
@@ -42,8 +43,9 @@ namespace cvsTool.Model
 
         public delegate void UpdateTradeLogParallelDelegate(string value);
         public UpdateTradeLogParallelDelegate updateTradeLogParallelDelegate;
-        public Simulation(string argName, ref TestParam argTestParam, ref PersonForm view)
+        public Simulation(string argName, TestParam argTestParam, ref PersonForm view, ref UInt32 currentThreadNum)
         {
+            currentThreadNum++;
             name = argName;            
             testParam = argTestParam;
             currentStatus = PositionStatus.None;
@@ -56,7 +58,16 @@ namespace cvsTool.Model
             currentPriceTrend = Trend.None;
             lastPriceTrend = Trend.None;
             TradeDt = new DataTable();
+            MAs = new List<MA>(8);
+            MAs.Add(new MA(5));
+            MAs.Add(new MA(10));
+            MAs.Add(new MA(20));
+            MAs.Add(new MA(30));
+            MAs.Add(new MA(60));
+            MAs.Add(new MA(120));
+            MAs.Add(new MA(240));
            
+            
             updateCurrentStatusDelegate = new Model.Simulation.UpdateCurrentStatusDelegate(view.updateCurrentStatus);
             updateTradeLogParallelDelegate = new Model.Simulation.UpdateTradeLogParallelDelegate(view.updateTradeLogParallelTextBox);
             
@@ -69,13 +80,14 @@ namespace cvsTool.Model
             initializeTradeDataTable();
             onInit();
             runSimulate();
-            string filename = string.Format("TI_{0:yyyyMMddHHmm}_BY{1}.csv", DateTime.Now, name);
-            string ss = String.Format("Trade,{0}, profit,{1}, Good Trade, {2}, Bad Trade,{3}, K1,{4}, K2, {5}, K3,{6}, File name,{7} \r\n", tradeTimes, profit, goodTradeTimes, badTradeTimes, testParam.k1, testParam.k2, testParam.k3, filename);
-            updateTradeLogParallelDelegate(ss);
             sw.Stop();
+            string filename = string.Format("TI{0:yyyyMMddHHmm}T{1}.csv", DateTime.Now, name);
+            string ss = String.Format("{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}\r\n", tradeTimes, profit, goodTradeTimes, badTradeTimes, testParam.k1, testParam.k2, testParam.k3, name, Convert.ToUInt32(sw.ElapsedMilliseconds / 1000), filename);
+            updateTradeLogParallelDelegate(ss);
+            
             Csv.SaveCSV(TradeDt, filename, ss);
-            string str = String.Format("Thread {0} : {1:yyyy-MM-dd HH:mm:ss} Complete, Spend {2}s.\r\n", name, DateTime.Now,Convert.ToUInt32(sw.ElapsedMilliseconds/1000));
-            updateTradeLogParallelDelegate(str);
+         //   string str = String.Format("Thread {0} : {1:yyyy-MM-dd HH:mm:ss} Complete, Spend {2}s.\r\n", name, DateTime.Now,Convert.ToUInt32(sw.ElapsedMilliseconds/1000));
+         //   updateTradeLogParallelDelegate(str);
 
 
         }
@@ -230,19 +242,22 @@ namespace cvsTool.Model
             currentPrice = (double)SimulationHouse.shareTable.Rows[index]["BidClose"];
             lastMA = currentMA;
 
-            currentMA.M5 = MA(index, 5);
-            currentMA.M10 = MA(index, 10);
-            currentMA.M20 = MA(index, 20);
-            currentMA.M60 = MA(index, 60);
-            currentMA.M120 = MA(index, 120);
+            currentMA.M5 = Cal_MA(index, 5);
+            currentMA.M10 = Cal_MA(index, 10);
+            currentMA.M20 = Cal_MA(index, 20);
+            currentMA.M30 = Cal_MA(index, 30);
+            currentMA.M60 = Cal_MA(index, 60);
+            currentMA.M120 = Cal_MA(index, 120);
+            currentMA.M240 = Cal_MA(index, 240);
 
             lastMATrend = currentMATrend;
             currentMATrend.M5_SlopeRatio = currentMA.M5 - lastMA.M5;
             currentMATrend.M10_SlopeRatio = currentMA.M10 - lastMA.M10;
             currentMATrend.M20_SlopeRatio = currentMA.M20 - lastMA.M20;
+            currentMATrend.M30_SlopeRatio = currentMA.M30 - lastMA.M30;
             currentMATrend.M60_SlopeRatio = currentMA.M60 - lastMA.M60;
             currentMATrend.M120_SlopeRatio = currentMA.M120 - lastMA.M120;
-
+            currentMATrend.M240_SlopeRatio = currentMA.M240 - lastMA.M240;
 
             lastPriceTrend = currentPriceTrend;
             if (currentMA.M5 > currentMA.M10)
@@ -259,7 +274,7 @@ namespace cvsTool.Model
 
         private void runCloseLongStrategy(int index)
         {
-            if ((index - currentPosition.index) == 7)
+            if ((index - currentPosition.index) == testParam.k1)
             {
                 closeLongPosition(index);
                 estimateThisTrade();
@@ -343,16 +358,42 @@ namespace cvsTool.Model
 
         }
 
-        private double MA(int index, UInt16 nb)
+        private double MA_old(int index, UInt16 nb)
         {
             double returnValue = 0.0;
 
             for (int i = 0; i < nb; i++)
             {
-                returnValue += (double)SimulationHouse.shareTable.Rows[index - i]["BidClose"];
+                returnValue += Convert.ToDouble(SimulationHouse.shareTable.Rows[index - i]["BidClose"]);
             }
             returnValue = returnValue / nb;
             return returnValue;
+        }
+        private double Cal_MA(int index, UInt16 nb)
+        {
+            int p = MAs.FindIndex(x => x.id == nb);
+
+            MAs[p].elementNumber++;
+            if(MAs[p].elementNumber>nb)
+            {
+                MAs[p].sum += Convert.ToDouble(SimulationHouse.shareTable.Rows[index]["BidClose"]);
+                MAs[p].sum -= Convert.ToDouble(SimulationHouse.shareTable.Rows[index - nb]["BidClose"]);
+                MAs[p].elementNumber--;
+                MAs[p].ma = MAs[p].sum / MAs[p].id;
+               
+            }
+            else if(MAs[p].elementNumber == nb)
+            {
+                MAs[p].sum += Convert.ToDouble(SimulationHouse.shareTable.Rows[index]["BidClose"]);
+                MAs[p].ma = MAs[p].sum / MAs[p].id;
+            }
+            else
+            {
+                MAs[p].sum += Convert.ToDouble(SimulationHouse.shareTable.Rows[index]["BidClose"]);
+                MAs[p].ma = 0;
+            }
+
+            return MAs[p].ma;
         }
 
         private void initializeTradeDataTable()

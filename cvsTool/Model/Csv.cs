@@ -31,13 +31,7 @@ namespace cvsTool.Model
 
         }
         public static DataTable Distinct(DataTable SourceDt, string filedName)
-        {
-          //  DataView dv = dt.DefaultView;
-         //   DataTable DistTable = dv.ToTable("DateTime", true, filedNames);
-          //  return DistTable;
-
-
-
+        {  
             for (int i = SourceDt.Rows.Count - 2; i > 0; i--)
             {
                 DataRow[] rows = SourceDt.Select(string.Format("{0}='{1}'", filedName, SourceDt.Rows[i][filedName]));
@@ -68,6 +62,10 @@ namespace cvsTool.Model
             sw.Close();
             fsr.Close();
             fsw.Close();
+            sr.Dispose();
+            sw.Dispose();
+            fsr.Dispose();
+            fsw.Dispose();          
 
         }
         public static void ReadToDataTable(DataTable dt, string fileName)
@@ -88,12 +86,6 @@ namespace cvsTool.Model
             //标示是否是读取的第一行
             bool IsFirst = true;
             //逐行读取CSV中的数据
-        //    List<string> listLine = new List<string>();
-        //    while((strLine = sr.ReadLine()) != null)
-        //    {
-        //        listLine.Add(strLine);
-        //    }
-
             while ((strLine = sr.ReadLine()) != null)
             {
                 if (IsFirst == true)
@@ -131,7 +123,9 @@ namespace cvsTool.Model
             }
             sr.Close();
             fs.Close();
-          //  return dt;
+            sr.Dispose();
+            fs.Dispose();
+           
         }
         public static void FastReadToDataTable(DataTable dt, string fileName)
         {
