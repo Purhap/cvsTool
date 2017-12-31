@@ -26,7 +26,7 @@ namespace cvsTool.Model
         private UInt64 goodTradeTimes;
 
         public List<MA> MAs; //5,10,20,30,60,120,240
-        public UInt64 simulationIndex;
+        public int simulationIndex;
         private PositionStatus currentStatus;
         private PostionStruct currentPosition;
         private Trend currentPriceTrend;
@@ -97,9 +97,10 @@ namespace cvsTool.Model
             
             for (int i = 200; i < end; i++)
             {
+                simulationIndex = i;
                 monitorPriceTrend(i);
 
-                if (i % 10000 == 0)
+                if (i % 20000 == 0)
                 {
                     string ss = String.Format("Thread {0} : {1:yyyy-MM-dd HH:mm:ss}", name, SimulationHouse.shareTable.Rows[i]["DateTime"]);
                     updateCurrentStatusDelegate(ss, Convert.ToUInt16(name));
@@ -329,12 +330,26 @@ namespace cvsTool.Model
             }
         }
 
-        private double waveRate()
+        private double waveRate_old()
         {
             double waveS = Math.Abs(currentMA.M5 - currentMA.M10);
             double waveM = Math.Abs(currentMA.M5 - currentMA.M20);
             double waveL = Math.Abs(currentMA.M5 - currentMA.M60);
             return Math.Sqrt(waveS * waveS + waveM * waveM);
+        }
+
+        private double waveRate()
+        {
+            double sum = 0.0;
+            for (int i = 0; i < 5; i++)
+            {
+                double item = Convert.ToDouble(SimulationHouse.shareTable.Rows[simulationIndex - i]["BidClose"]);
+                sum +=  Math.Pow((item- MAs[0].ma),2);
+            }
+            sum /= 4;
+            double sigma = Math.Pow(sum, 0.5);
+
+            return sigma;
         }
 
         private void openAskPosition(int index)

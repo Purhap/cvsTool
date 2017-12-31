@@ -725,12 +725,10 @@ namespace cvsTool.View
             }
             
             this.textBox3.Text += string.Format("{0:yyyy-MM-dd HH:mm:ss}", DateTime.Now)+" Simulation Start\r\n";
-            this.textBox3.Text += "TradeTimes, Profits, Good, Bad, K1, K2, K3, Thread ID,Time Cost, File Name\r\n";
+            this.textBox3.Text += "TradeTimes, Profits, Good, Bad, K1, K2, K3, Thread ID, Time Cost, File Name\r\n";
             Controllor.Model.simulationHouse = new Model.SimulationHouse(ParallelNb, simulationStartNb, simulationEndNb,tp,ref view);
  
-            Controllor.startParallelSimulation(ref Controllor.Model.simulationHouse);
-            
-            
+            Controllor.startParallelSimulation(ref Controllor.Model.simulationHouse);           
         }
 
         public void updateCurrentStatus(string value, UInt16 index)
@@ -741,8 +739,7 @@ namespace cvsTool.View
                 for (int i = 0; i < Controllor.Model.simulationHouse.currentThreadNum; i++)
                 {
                    this.Invoke(Controllor.Model.simulationHouse.simulations[i].updateCurrentStatusDelegate, new object[] { value, labelIndex });
-                }
-                               
+                }                               
             }
             else
             {
