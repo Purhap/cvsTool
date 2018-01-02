@@ -148,6 +148,7 @@
             this.Controls.Add(this.dateTimePicker1);
             this.Controls.Add(this.label1);
             this.Name = "Chart";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Chart_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
