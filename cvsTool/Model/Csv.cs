@@ -112,20 +112,15 @@ namespace cvsTool.Model
                 }
                 else
                 {
+
+
                     aryLine = strLine.Split(',');
                     DataRow dr = dt.NewRow();
-              //      for (int j = 0; j < columnCount; j++)
-             //       {
-             //           dr[j] = aryLine[j];
-             //       }
-              //      dt.Rows.Add(dr);
-
-                    Parallel.For(0, columnCount, j =>
+                    for (int j = 0; j < columnCount; j++)
                     {
                         dr[j] = aryLine[j];
-                    });
-                    dt.Rows.Add(dr);
-
+                    }
+                    dt.Rows.Add(dr);                
                 }
             }
             sr.Close();
@@ -252,15 +247,14 @@ namespace cvsTool.Model
                 }
                 else
                 {
-                    
-                    aryLine = str.Split(',');
+                    aryLine = strLine.Split(',');
                     DataRow dr = dt.NewRow();
-                    for (int j = 0; j < columnCount; j++)
+
+                    Parallel.For(0, columnCount, j =>
                     {
                         dr[j] = aryLine[j];
-                    }
+                    });
                     dt.Rows.Add(dr);
-
                 }
             }
 

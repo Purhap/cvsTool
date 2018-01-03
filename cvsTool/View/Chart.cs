@@ -35,10 +35,6 @@ namespace cvsTool.View
         }
         private void onInit()
         {
-            var cols = new[] { historyDataTable.Columns["DateTime"] };
-            historyDataTable.PrimaryKey = cols;
-
-
             Stopwatch sw = new Stopwatch();
             sw.Start();
             loadDataTable();
@@ -54,7 +50,7 @@ namespace cvsTool.View
         //    MessageBox.Show(string.Format("t1{0}, t2:{1}.", t1, t2));
 
             string title = controllor.Model._name;
-            fillDataToChart();
+            InitDataToChart();
             chartTimer = new System.Windows.Forms.Timer();
             chartTimer.Interval = 1000;
             chartTimer.Tick += chartTimer_Tick;
@@ -86,14 +82,6 @@ namespace cvsTool.View
 
         private void chartTimer_Tick(object sender, EventArgs e)
         {
-           
-          //  Series series = chart1.Series[0];
-          //  //series.Points.Count = 50;
-          ////  chart1.ChartAreas[0].AxisX.ScaleView.Size = 80;
-          //  chart1.ChartAreas[0].AxisX.ScaleView.MinSize = 10;
-          //  //    chart1.ChartAreas[0].AxisX.ScaleView.Position = series.Points.Count - 5;
-          //  chart1.ChartAreas[0].AxisY.IsMarginVisible = true;
-              
                 
         }
        
@@ -124,7 +112,7 @@ namespace cvsTool.View
            {          
            }
         }
-        private void fillDataToChart()
+        private void InitDataToChart()
         {
             
             this.chart1.Series[0].ChartType = SeriesChartType.Candlestick;
@@ -184,9 +172,9 @@ namespace cvsTool.View
             // chart1.Series[0]["PriceDownColor"] = "Green";
             // chart1.Series[0]["OpenCloseStyle"] = "Triangle";
             chart1.ChartAreas[0].AxisY.IsStartedFromZero = false;
-            chart1.ChartAreas[0].AxisY.Minimum = min - 0.0010;
-            chart1.ChartAreas[0].AxisY.Maximum = max + 0.0010;
-            chart1.ChartAreas[0].AxisY.Interval = (max -min)/20;
+            chart1.ChartAreas[0].AxisY.Minimum = Math.Round(min - 0.0020,5);
+            chart1.ChartAreas[0].AxisY.Maximum = Math.Round(max + 0.0020,5);
+            chart1.ChartAreas[0].AxisY.Interval = Math.Round((max -min)/20,1);
             //chart1.DataManipulator.FinancialFormula(FinancialFormula.MovingAverage, "5", "Minute", "MA");
             chart1.DataManipulator.FinancialFormula(FinancialFormula.MovingAverage, "5", this.chart1.Series[0], this.chart1.Series["M5"]);
             chart1.DataManipulator.FinancialFormula(FinancialFormula.MovingAverage, "10", this.chart1.Series[0], this.chart1.Series["M10"]);
@@ -376,35 +364,18 @@ namespace cvsTool.View
             chart1.DataManipulator.FinancialFormula(FinancialFormula.MovingAverage, "10", this.chart1.Series[0], this.chart1.Series["M10"]);
             chart1.DataManipulator.FinancialFormula(FinancialFormula.MovingAverage, "20", this.chart1.Series[0], this.chart1.Series["M20"]);
             chart1.DataManipulator.FinancialFormula(FinancialFormula.MovingAverage, "60", this.chart1.Series[0], this.chart1.Series["M60"]);
-            
-            // chart1.Series[0].BorderWidth = 2;
-
-            // chart1.Series[0].BorderColor = System.Drawing.Color.Black;
-            //chart1.Series[0].Color = System.Drawing.Color.Black;
 
             // chart1.Series[0]["PriceUpColor"] = "Red";
             // chart1.Series[0]["PointWidth"] = "0.10";
             // chart1.Series[0]["PriceDownColor"] = "Green";
             // chart1.Series[0]["OpenCloseStyle"] = "Triangle";
-            chart1.ChartAreas[0].AxisY.Minimum = min - 0.0010;
-            chart1.ChartAreas[0].AxisY.Maximum = max + 0.0010;
-            chart1.ChartAreas[0].AxisY.Interval = (max - min) / 20;
-            //chart1.DataManipulator.FinancialFormula(FinancialFormula.MovingAverage, "15", "Daily", "MA");
+            chart1.ChartAreas[0].AxisY.Minimum = Math.Round(min - 0.0020, 5);
+            chart1.ChartAreas[0].AxisY.Maximum = Math.Round(max + 0.0020, 5);
+            chart1.ChartAreas[0].AxisY.Interval = Math.Round((max - min) / 20, 1);
             chart1.ChartAreas[0].AxisY.IsStartedFromZero = false;
             chart1.ChartAreas[0].AxisX.ScaleView.Size = 150;
 
-         //   chart1.ChartAreas[0].CursorX.IsUserEnabled = true;//打开X轴滚动条
-                                                              //  chart1.ChartAreas[0].CursorY.IsUserEnabled = true;//打开Y轴滚动条
-        //    chart1.ChartAreas[0].CursorX.IsUserSelectionEnabled = true;//打开X轴滚动条 区域
-                                                                       // chart1.ChartAreas[0].CursorY.IsUserSelectionEnabled = true;//打开Y轴滚动条 区域
-                                                                       //  chart1.ChartAreas[0].CursorX.AutoScroll = true;
-                                                                       //  chart1.ChartAreas[0].CursorY.AutoScroll = true;
-                                                                       // chart1.ChartAreas[0].AxisX.Interval = 5;
-            
-
-                
-
-        }
+      }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
