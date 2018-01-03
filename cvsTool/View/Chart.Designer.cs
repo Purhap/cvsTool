@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
@@ -67,7 +67,7 @@
             // dateTimePicker1
             // 
             this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.dateTimePicker1.Location = new System.Drawing.Point(216, 14);
+            this.dateTimePicker1.Location = new System.Drawing.Point(308, 14);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(105, 21);
             this.dateTimePicker1.TabIndex = 4;
@@ -76,7 +76,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(143, 14);
+            this.label1.Location = new System.Drawing.Point(156, 17);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(41, 12);
             this.label1.TabIndex = 5;
@@ -85,14 +85,14 @@
             // dateTimePicker2
             // 
             this.dateTimePicker2.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.dateTimePicker2.Location = new System.Drawing.Point(345, 14);
+            this.dateTimePicker2.Location = new System.Drawing.Point(437, 14);
             this.dateTimePicker2.Name = "dateTimePicker2";
             this.dateTimePicker2.Size = new System.Drawing.Size(98, 21);
             this.dateTimePicker2.TabIndex = 6;
             // 
             // LoadChart
             // 
-            this.LoadChart.Location = new System.Drawing.Point(465, 12);
+            this.LoadChart.Location = new System.Drawing.Point(557, 12);
             this.LoadChart.Name = "LoadChart";
             this.LoadChart.Size = new System.Drawing.Size(86, 23);
             this.LoadChart.TabIndex = 7;
@@ -102,35 +102,35 @@
             // 
             // chart1
             // 
-            chartArea1.AxisX.IsStartedFromZero = false;
-            chartArea1.AxisX.LogarithmBase = 15D;
-            chartArea1.BorderWidth = 10;
-            chartArea1.InnerPlotPosition.Auto = false;
-            chartArea1.InnerPlotPosition.Height = 71.8484F;
-            chartArea1.InnerPlotPosition.Width = 82.29789F;
-            chartArea1.InnerPlotPosition.X = 13.87513F;
-            chartArea1.InnerPlotPosition.Y = 3.35106F;
-            chartArea1.Name = "ChartArea1";
-            chartArea1.Position.Auto = false;
-            chartArea1.Position.Height = 94F;
-            chartArea1.Position.Width = 68.59197F;
-            chartArea1.Position.X = 3F;
-            chartArea1.Position.Y = 3F;
-            this.chart1.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chart1.Legends.Add(legend1);
-            this.chart1.Location = new System.Drawing.Point(47, 97);
+            chartArea2.AxisX.IsStartedFromZero = false;
+            chartArea2.AxisX.LogarithmBase = 15D;
+            chartArea2.BorderWidth = 10;
+            chartArea2.InnerPlotPosition.Auto = false;
+            chartArea2.InnerPlotPosition.Height = 71.8484F;
+            chartArea2.InnerPlotPosition.Width = 82.29789F;
+            chartArea2.InnerPlotPosition.X = 13.87513F;
+            chartArea2.InnerPlotPosition.Y = 3.35106F;
+            chartArea2.Name = "ChartArea1";
+            chartArea2.Position.Auto = false;
+            chartArea2.Position.Height = 94F;
+            chartArea2.Position.Width = 68.59197F;
+            chartArea2.Position.X = 3F;
+            chartArea2.Position.Y = 3F;
+            this.chart1.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chart1.Legends.Add(legend2);
+            this.chart1.Location = new System.Drawing.Point(5, 97);
             this.chart1.Name = "chart1";
-            series1.BorderColor = System.Drawing.Color.White;
-            series1.ChartArea = "ChartArea1";
-            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Candlestick;
-            series1.CustomProperties = "PriceDownColor=Lime, PriceUpColor=Red, MaxPixelPointWidth=15";
-            series1.Legend = "Legend1";
-            series1.Name = "Bid";
-            series1.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
-            series1.YValuesPerPoint = 4;
-            series1.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
-            this.chart1.Series.Add(series1);
+            series2.BorderColor = System.Drawing.Color.White;
+            series2.ChartArea = "ChartArea1";
+            series2.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Candlestick;
+            series2.CustomProperties = "PriceDownColor=Lime, PriceUpColor=Red, MaxPixelPointWidth=15";
+            series2.Legend = "Legend1";
+            series2.Name = "Bid";
+            series2.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.DateTime;
+            series2.YValuesPerPoint = 4;
+            series2.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Double;
+            this.chart1.Series.Add(series2);
             this.chart1.Size = new System.Drawing.Size(300, 300);
             this.chart1.TabIndex = 8;
             this.chart1.Text = "chart1";
@@ -139,7 +139,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1139, 520);
+            this.ClientSize = new System.Drawing.Size(1139, 562);
             this.Controls.Add(this.chart1);
             this.Controls.Add(this.LoadChart);
             this.Controls.Add(this.radioButton1);

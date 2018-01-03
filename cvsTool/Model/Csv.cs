@@ -129,6 +129,66 @@ namespace cvsTool.Model
             fs.Dispose();
            
         }
+        public static void ReadToDataTable(DataTable dt, string fileName,int startLine, int size)
+        {
+            FileStream fs = new FileStream(fileName, System.IO.FileMode.Open, System.IO.FileAccess.Read);
+
+            // StreamReader sr = new StreamReader(fs, Encoding.Unicode);
+            StreamReader sr = new StreamReader(fs, Encoding.UTF8);
+            //string fileContent = sr.ReadToEnd();
+            //encoding = sr.CurrentEncoding;
+            //记录每次读取的一行记录
+            string strLine = "";
+            //记录每行记录中的各字段内容
+            string[] aryLine = null;
+            string[] tableHead = null;
+            //标示列数
+            int columnCount = 0;
+            //标示是否是读取的第一行
+            bool IsFirst = true;
+            //逐行读取CSV中的数据
+            int lineNumber = 0;
+            while (((strLine = sr.ReadLine()) != null)&&(lineNumber <= size))
+            {
+                if (IsFirst == true)
+                {
+                    tableHead = strLine.Split(',');
+                    IsFirst = false;
+                    columnCount = tableHead.Length;
+                    //创建列
+                    for (int i = 0; i < columnCount; i++)
+                    {
+                        if (i == 0)
+                        {
+                            DataColumn dc = new DataColumn(tableHead[i], typeof(DateTime));
+                            dt.Columns.Add(dc);
+
+                        }
+                        else
+                        {
+                            DataColumn dc = new DataColumn(tableHead[i], typeof(double));
+                            dt.Columns.Add(dc);
+                        }
+                    }
+                }
+                else
+                {
+                    aryLine = strLine.Split(',');
+                    DataRow dr = dt.NewRow();
+                    for (int j = 0; j < columnCount; j++)
+                    {
+                        dr[j] = aryLine[j];
+                    }
+                    dt.Rows.Add(dr);
+                    lineNumber++;
+                }
+            }
+            sr.Close();
+            fs.Close();
+            sr.Dispose();
+            fs.Dispose();
+
+        }
         public static void FastReadToDataTable(DataTable dt, string fileName)
         {
             FileStream fs = new FileStream(fileName, System.IO.FileMode.Open, System.IO.FileAccess.Read);
