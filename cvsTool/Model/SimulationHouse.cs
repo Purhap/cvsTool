@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -39,7 +40,23 @@ namespace cvsTool.Model
 
         }
         public void runParallelSimulation()
-        {       
+        {
+           
+            loadMultiFiles2DataTable();
+            //try
+            //{
+            //    Parallel.For(startIndex, endIndex, new ParallelOptions() { MaxDegreeOfParallelism = parallelNum }, i => { createSimulationAndRun(i); });
+            //}
+            //catch (AggregateException err)
+            //{
+            //    foreach (Exception item in err.InnerExceptions)
+            //    {
+            //        Console.WriteLine("exception: {0}{1} from : {2}{3} content:{4}",item.InnerException.GetType(), Environment.NewLine, item.InnerException.Source, Environment.NewLine, item.InnerException.Message);
+            //    }
+            //}
+        }
+        public void runParallelSimulation_old()
+        {
             loadDataTable();
             try
             {
@@ -49,7 +66,7 @@ namespace cvsTool.Model
             {
                 foreach (Exception item in err.InnerExceptions)
                 {
-                    Console.WriteLine("exception: {0}{1} from : {2}{3} content:{4}",item.InnerException.GetType(), Environment.NewLine, item.InnerException.Source, Environment.NewLine, item.InnerException.Message);
+                    Console.WriteLine("exception: {0}{1} from : {2}{3} content:{4}", item.InnerException.GetType(), Environment.NewLine, item.InnerException.Source, Environment.NewLine, item.InnerException.Message);
                 }
             }
         }
@@ -90,6 +107,21 @@ namespace cvsTool.Model
                         
           //  shareTable.DefaultView.Sort = "DateTime ASC";
            // shareTable = shareTable.DefaultView.ToTable();            
+        }
+        private void loadMultiFiles2DataTable()
+        {
+            string path = @"D:\works\Astocks\export";
+            DirectoryInfo folder = new DirectoryInfo(path);
+            foreach (FileInfo file in folder.GetFiles("*.txt"))
+            {
+                Console.WriteLine(file.FullName);
+            }
+            Csv.ReadToDataTable(shareTable, "EUR2USD.csv");
+            var query = shareTable.AsEnumerable().OrderBy(r => r["DateTime"]);
+            shareTable = query.CopyToDataTable();
+
+            //  shareTable.DefaultView.Sort = "DateTime ASC";
+            // shareTable = shareTable.DefaultView.ToTable();            
         }
     }
 }
