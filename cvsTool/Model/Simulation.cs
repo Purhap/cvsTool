@@ -66,8 +66,7 @@ namespace cvsTool.Model
             MAs.Add(new MA(60));
             MAs.Add(new MA(120));
             MAs.Add(new MA(240));
-           
-            
+                       
             updateCurrentStatusDelegate = new Model.Simulation.UpdateCurrentStatusDelegate(view.updateCurrentStatus);
             updateTradeLogParallelDelegate = new Model.Simulation.UpdateTradeLogParallelDelegate(view.updateTradeLogParallelTextBox);
             

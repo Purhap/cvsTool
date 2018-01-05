@@ -25,6 +25,22 @@ namespace cvsTool.Model
             public double k3_Step; //wave ratio
             public double k4_Step;
         }
+        public struct Price
+        {
+            public double Open;
+            public double High;
+            public double Low;
+            public double Close;    
+            public Price(double argOpen, double argHigh, double argLow, double argClose) :this()
+            {
+                Open = argOpen;
+                High = argHigh;
+                Low = argLow;
+                Close = argClose;
+
+            }        
+           
+        }
         public struct TestParam
         {
             public UInt16 k1;// hold time

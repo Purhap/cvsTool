@@ -78,6 +78,7 @@
     <Compile Include="Model\Simulation.cs" />
     <Compile Include="Model\SimulationHouse.cs" />
     <Compile Include="Model\Simulator.cs" />
+    <Compile Include="Model\StrategyA001.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\Chart.cs">

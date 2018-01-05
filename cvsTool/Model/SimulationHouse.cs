@@ -22,6 +22,7 @@ namespace cvsTool.Model
         public TestParamsRange tpr;
         public List <Simulation> simulations;
         public static DataTable shareTable;
+        public static List<DataTable> AllPricelistTable;
         public List<TestParam> listTestParams ;
         public PersonForm view;
         public SimulationHouse(UInt16 artParallelNum,UInt16 argStartIndex, UInt16 argEndIndex, TestParamsRange argTpr, ref PersonForm argView)
@@ -36,13 +37,37 @@ namespace cvsTool.Model
             listTestParams = new List<TestParam>();
             loadTestParams();
             currentThreadNum = 0;
+            AllPricelistTable = new List<DataTable>();
 
 
         }
         public void runParallelSimulation()
         {
-           
+
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
             loadMultiFiles2DataTable();
+            sw.Stop();
+            Console.WriteLine("Cost {0}ms",sw.ElapsedMilliseconds);
+
+            StrategyA001 SA001 = new StrategyA001();
+            SA001.runSimulation();
+        //    DataTable S50 = new DataTable();
+        //    SA001.getTop50VolumeStocks(Convert.ToDateTime("2017-8-8"), ref S50);
+
+            //for (int i = 0; i < 50; i++)
+            //{
+            //    //Console.WriteLine("{0}:Ss:{1}-{2:yyyy-MM-dd}-{3}", i, S50.Rows[i][], S50[i].Rows[0]["DateTime"], S50[i].Rows[0]["Volume"]);
+            //    Console.WriteLine("{0}:Ss:{1}-{2:yyyy-MM-dd}-{3}", i, S50.Rows[i]["Name"], S50.Rows[i]["DateTime"], S50.Rows[i]["Volume"]);
+            //    sw.Restart();
+            //    Price p = new Price(0.0, 0.0, 0.0, 0.0);
+            //    SA001.getPrice(S50.Rows[i]["Name"].ToString(), Convert.ToDateTime(S50.Rows[i]["DateTime"]), ref p);
+            //    sw.Stop();
+            //    Console.WriteLine("{0}, {1},{2},{3}, Cost {4}ms", p.Open, p.High, p.Low, p.Close, sw.ElapsedMilliseconds);
+            //}
+
+
+
             //try
             //{
             //    Parallel.For(startIndex, endIndex, new ParallelOptions() { MaxDegreeOfParallelism = parallelNum }, i => { createSimulationAndRun(i); });
@@ -114,14 +139,21 @@ namespace cvsTool.Model
             DirectoryInfo folder = new DirectoryInfo(path);
             foreach (FileInfo file in folder.GetFiles("*.txt"))
             {
-                Console.WriteLine(file.FullName);
-            }
-            Csv.ReadToDataTable(shareTable, "EUR2USD.csv");
-            var query = shareTable.AsEnumerable().OrderBy(r => r["DateTime"]);
-            shareTable = query.CopyToDataTable();
+                DataTable dt = new DataTable();
+                
+                Csv.ReadAStocksDataTable(dt, file.FullName);
 
-            //  shareTable.DefaultView.Sort = "DateTime ASC";
-            // shareTable = shareTable.DefaultView.ToTable();            
+                var query = dt.AsEnumerable().OrderBy(r => r["DateTime"]);
+                if (query.Count() > 0)
+                {
+                    dt = query.CopyToDataTable();                
+                    string name = file.Name;
+                    name = name.Remove(name.Length - 4, 4);
+                    dt.TableName = name;
+                    AllPricelistTable.Add(dt);
+                }
+            }
+         
         }
     }
 }

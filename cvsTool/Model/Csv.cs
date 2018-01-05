@@ -112,8 +112,6 @@ namespace cvsTool.Model
                 }
                 else
                 {
-
-
                     aryLine = strLine.Split(',');
                     DataRow dr = dt.NewRow();
                     for (int j = 0; j < columnCount; j++)
@@ -128,6 +126,70 @@ namespace cvsTool.Model
             sr.Dispose();
             fs.Dispose();
            
+        }
+        public static void ReadAStocksDataTable(DataTable dt, string fileName)
+        {
+            FileStream fs = new FileStream(fileName, System.IO.FileMode.Open, System.IO.FileAccess.Read);
+
+            // StreamReader sr = new StreamReader(fs, Encoding.Unicode);
+            StreamReader sr = new StreamReader(fs, Encoding.UTF8);
+            //string fileContent = sr.ReadToEnd();
+            //encoding = sr.CurrentEncoding;
+            //记录每次读取的一行记录
+            string strLine = "";
+            //记录每行记录中的各字段内容
+            string[] aryLine = null;
+            string[] tableHead = null;
+            //标示列数
+            int columnCount = 7;
+            //标示是否是读取的第一行
+            bool IsFirst = true;
+            //逐行读取CSV中的数据
+            
+            string[] columnsNames = new string[] { "DateTime", "Open", "High", "Low", "Close", "Quantity", "Volume" };
+            for (int i = 0; i < columnCount; i++)
+            {
+                if (i == 0)
+                {
+                    DataColumn dc = new DataColumn(columnsNames[i], typeof(DateTime));
+                    dt.Columns.Add(dc);
+
+                }
+                else
+                {
+                    DataColumn dc = new DataColumn(columnsNames[i], typeof(double));
+                    dt.Columns.Add(dc);
+                }
+            }
+     
+            while ((strLine = sr.ReadLine()) != null)
+            {
+                //aryLine = strLine.Split(' ');
+                aryLine = System.Text.RegularExpressions.Regex.Split(strLine, @"\s{1,}");
+                if(aryLine.Count()==7)
+                {
+                DataRow dr = dt.NewRow();
+                for (int j = 0; j < columnCount; j++)
+                {
+                    if(j ==0)
+                    {
+                        dr[j] = DateTime.ParseExact(aryLine[j], "yyyy/MM/dd", System.Globalization.CultureInfo.InvariantCulture);
+                       
+                    }
+                    else
+                    {
+                        dr[j] = Convert.ToDouble(aryLine[j]);
+                    }                    
+                }
+                dt.Rows.Add(dr);
+                }
+
+            }
+            sr.Close();
+            fs.Close();
+            sr.Dispose();
+            fs.Dispose();
+
         }
         public static void ReadToDataTable(DataTable dt, string fileName,int startLine, int size)
         {
