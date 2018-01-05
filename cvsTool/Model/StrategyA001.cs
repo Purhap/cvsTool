@@ -288,18 +288,19 @@ namespace cvsTool.Model
 
             //Calculate Profits 
             double profit = 0.0;
+            double buyPrice = Open.Open * (1 - 0.003);
             double sellPrice = Close.High * (1 - 0.003);
-            profit = quantity * (sellPrice * - Open.Open);
+            profit = quantity * (sellPrice - buyPrice);
 
             profit -= quantity * sellPrice * 0.001; //印花税
             profit -= quantity * sellPrice * 0.00025; //卖出 佣金
-            profit -= quantity * Open.Open * 0.00025; //买入 佣金
+            profit -= quantity * buyPrice * 0.00025; //买入 佣金
             profit -= quantity * sellPrice * 0.00002; //卖出 过户费
-            profit -= quantity * Open.Open * 0.00002; //买入 过户费
+            profit -= quantity * buyPrice * 0.00002; //买入 过户费
 
             //save trade data to DateTable
             DataRow dr = TradeDt.NewRow();
-            TradeDt.Rows.Add(name, T1, Open.Open, "L", quantity, T2, sellPrice, profit);
+            TradeDt.Rows.Add(name, T1, buyPrice, "L", quantity, T2, sellPrice, profit);
             return true;
         }
         public void OneDayTask(int i)
