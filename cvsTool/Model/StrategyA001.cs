@@ -195,12 +195,16 @@ namespace cvsTool.Model
         public void runSimulation()
         {
             int badTime = 0;
-            DateTime dt = Convert.ToDateTime("2017-8-8");// DateTime.ParseExact("2017/04/01", "yyyy/MM/dd", System.Globalization.CultureInfo.InvariantCulture);
+            DateTime dt = Convert.ToDateTime("2017-4-1");// DateTime.ParseExact("2017/04/01", "yyyy/MM/dd", System.Globalization.CultureInfo.InvariantCulture);
             for (int i = 0; i < 60; i++)
             {
+                dt = dt.AddDays(1);
                 bool ret = getTop50VolumeStocks(dt, ref StockDt);
                 if (ret == false)
+                {                    
                     continue;
+                }
+                    
                 for (int j = 0; j < 50; j++)
                 {
                     ret = doOneTrade(StockDt.Rows[j]["Name"].ToString(), dt, 100000.0);
@@ -208,12 +212,11 @@ namespace cvsTool.Model
                     {
                         badTime++;
                     }
-                }
-
-                dt = dt.AddDays(1);
+                }                
                 Console.WriteLine("{0}{1}",i, dt.ToShortDateString());
             }
-            Csv.SaveCSV(TradeDt, "T50"+ DateTime.Now.ToShortTimeString() +".csv");
+            
+            Csv.SaveCSV(TradeDt, string.Format("T50-{0:yyyyMMddHHmm}.csv", DateTime.Now));
             Console.WriteLine("Bad time is {0}.", badTime);
         }
         public void openPosition(string name,DateTime dt, double yuan)
@@ -285,16 +288,18 @@ namespace cvsTool.Model
 
             //Calculate Profits 
             double profit = 0.0;
-            profit = quantity * (Close.High - Open.Open);
-            profit -= quantity * Close.High * 0.001; //印花税
-            profit -= quantity * Close.High * 0.00025; //卖出 佣金
+            double sellPrice = Close.High * (1 - 0.003);
+            profit = quantity * (sellPrice * - Open.Open);
+
+            profit -= quantity * sellPrice * 0.001; //印花税
+            profit -= quantity * sellPrice * 0.00025; //卖出 佣金
             profit -= quantity * Open.Open * 0.00025; //买入 佣金
-            profit -= quantity * Close.High * 0.00002; //卖出 过户费
+            profit -= quantity * sellPrice * 0.00002; //卖出 过户费
             profit -= quantity * Open.Open * 0.00002; //买入 过户费
 
             //save trade data to DateTable
             DataRow dr = TradeDt.NewRow();
-            TradeDt.Rows.Add(name, T1, Open.Open, "L", quantity, T2, Close.High, profit);
+            TradeDt.Rows.Add(name, T1, Open.Open, "L", quantity, T2, sellPrice, profit);
             return true;
         }
         public void OneDayTask(int i)
