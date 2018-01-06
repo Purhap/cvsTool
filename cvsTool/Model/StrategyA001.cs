@@ -22,8 +22,8 @@ namespace cvsTool.Model
         public DataTable TradeDt;
         public DataTable StockDt;
 
-        public delegate void UpdateCurrentStatusDelegate(string value);
-        public UpdateCurrentStatusDelegate updateCurrentStatusDelegate;
+     //   public delegate void UpdateCurrentStatusDelegate(string value);
+     //   public UpdateCurrentStatusDelegate updateCurrentTimeDelegate;
         public StrategyA001()
         {
             TradeDt = new DataTable();
@@ -247,7 +247,7 @@ namespace cvsTool.Model
                 while((code ==2)&&(waitday<10))
                 {
                     waitday++;
-                    T1 = T1.AddDays(waitday);
+                    T1 = T1.AddDays(1);
                     code = getPrice(name, T1, ref Open);                    
                 }
                 if (waitday >= 10)
@@ -276,7 +276,7 @@ namespace cvsTool.Model
                 while ((code == 2) && (waitday < 20))
                 {
                     waitday++;
-                    T2 = T2.AddDays(waitday);
+                    T2 = T2.AddDays(1);
                     code = getPrice(name, T2, ref Close);
                 }
                 if (waitday >= 20)
@@ -288,7 +288,7 @@ namespace cvsTool.Model
 
             //Calculate Profits 
             double profit = 0.0;
-            double buyPrice = Open.Open * (1 - 0.003);
+            double buyPrice = Open.Open;
             double sellPrice = Close.High * (1 - 0.003);
             profit = quantity * (sellPrice - buyPrice);
 
