@@ -20,7 +20,8 @@ namespace cvsTool.Model
         private UInt16 startIndex;
         private UInt16 endIndex;
         public TestParamsRange tpr;
-        public List <Simulation> simulations;
+      //  public List <Simulation> simulations;
+        public List<StrategyA001> simulations;
         public static DataTable shareTable;
         public static List<DataTable> AllPricelistTable;
         public List<TestParam> listTestParams ;
@@ -33,7 +34,7 @@ namespace cvsTool.Model
             tpr = argTpr;
             view = argView;
             shareTable = new DataTable();
-            simulations = new List<Simulation>(1000);
+            simulations = new List<StrategyA001>(1000);
             listTestParams = new List<TestParam>();
             loadTestParams();
             currentThreadNum = 0;
@@ -46,39 +47,25 @@ namespace cvsTool.Model
 
             Stopwatch sw = new Stopwatch();
             sw.Start();
+            loadTestParams();
             loadMultiFiles2DataTable();
             sw.Stop();
             Console.WriteLine("Cost {0}ms",sw.ElapsedMilliseconds);
 
-            StrategyA001 SA001 = new StrategyA001();
-            SA001.runSimulation();
-        //    DataTable S50 = new DataTable();
-        //    SA001.getTop50VolumeStocks(Convert.ToDateTime("2017-8-8"), ref S50);
+            // StrategyA001 SA001 = new StrategyA001();
+            //SA001.runSimulation();
 
-            //for (int i = 0; i < 50; i++)
-            //{
-            //    //Console.WriteLine("{0}:Ss:{1}-{2:yyyy-MM-dd}-{3}", i, S50.Rows[i][], S50[i].Rows[0]["DateTime"], S50[i].Rows[0]["Volume"]);
-            //    Console.WriteLine("{0}:Ss:{1}-{2:yyyy-MM-dd}-{3}", i, S50.Rows[i]["Name"], S50.Rows[i]["DateTime"], S50.Rows[i]["Volume"]);
-            //    sw.Restart();
-            //    Price p = new Price(0.0, 0.0, 0.0, 0.0);
-            //    SA001.getPrice(S50.Rows[i]["Name"].ToString(), Convert.ToDateTime(S50.Rows[i]["DateTime"]), ref p);
-            //    sw.Stop();
-            //    Console.WriteLine("{0}, {1},{2},{3}, Cost {4}ms", p.Open, p.High, p.Low, p.Close, sw.ElapsedMilliseconds);
-            //}
-
-
-
-            //try
-            //{
-            //    Parallel.For(startIndex, endIndex, new ParallelOptions() { MaxDegreeOfParallelism = parallelNum }, i => { createSimulationAndRun(i); });
-            //}
-            //catch (AggregateException err)
-            //{
-            //    foreach (Exception item in err.InnerExceptions)
-            //    {
-            //        Console.WriteLine("exception: {0}{1} from : {2}{3} content:{4}",item.InnerException.GetType(), Environment.NewLine, item.InnerException.Source, Environment.NewLine, item.InnerException.Message);
-            //    }
-            //}
+            try
+            {
+                Parallel.For(startIndex, endIndex, new ParallelOptions() { MaxDegreeOfParallelism = parallelNum }, i => { createSimulationAndRun(i); });
+            }
+            catch (AggregateException err)
+            {
+                foreach (Exception item in err.InnerExceptions)
+                {
+                    Console.WriteLine("exception: {0}{1} from : {2}{3} content:{4}", item.InnerException.GetType(), Environment.NewLine, item.InnerException.Source, Environment.NewLine, item.InnerException.Message);
+                }
+            }
         }
         public void runParallelSimulation_old()
         {
@@ -95,11 +82,21 @@ namespace cvsTool.Model
                 }
             }
         }
+        private void createSimulationAndRun_old(int i)
+        {
+          //  Simulation oneSimulation = new Simulation(i.ToString(), listTestParams[i], ref view, ref currentThreadNum);
+          //  simulations.Add(oneSimulation);
+          //  oneSimulation.runOnceSimulation();
+        }
         private void createSimulationAndRun(int i)
         {
-            Simulation oneSimulation = new Simulation(i.ToString(), listTestParams[i], ref view, ref currentThreadNum);
+            StrategyA001 oneSimulation = new StrategyA001(i.ToString(), listTestParams[i], ref view, ref currentThreadNum);
             simulations.Add(oneSimulation);
-            oneSimulation.runOnceSimulation();
+            oneSimulation.runSimulation();
+           
+            //    Simulation oneSimulation = new Simulation(i.ToString(), listTestParams[i], ref view, ref currentThreadNum);
+            //    simulations.Add(oneSimulation);
+           // oneSimulation.runOnceSimulation();
         }
 
         private void loadTestParams()
@@ -135,7 +132,8 @@ namespace cvsTool.Model
         }
         private void loadMultiFiles2DataTable()
         {
-            string path = @"D:\works\Astocks\export";
+            string path = @"D:\new_tdx\T0002\export";
+          //  string path = @"D:\works\Astocks\export";
             DirectoryInfo folder = new DirectoryInfo(path);
             foreach (FileInfo file in folder.GetFiles("*.txt"))
             {
@@ -152,8 +150,7 @@ namespace cvsTool.Model
                     dt.TableName = name;
                     AllPricelistTable.Add(dt);
                 }
-            }
-         
+            }         
         }
     }
 }
