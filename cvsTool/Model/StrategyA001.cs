@@ -162,7 +162,11 @@ namespace cvsTool.Model
                         select x;
             if (query.Count() > 0)
             {
-                outputTable = query.CopyToDataTable();
+                outputTable = query.CopyToDataTable().Clone();
+                for (int i = 0; i < 50; i++)
+                {
+                    outputTable.ImportRow(query.CopyToDataTable().Rows[i]);
+                }
             }
             else
             {
@@ -224,7 +228,7 @@ namespace cvsTool.Model
             int badTime = 0;
             Stopwatch sw = new Stopwatch();
             sw.Start();
-            DateTime dt = Convert.ToDateTime("2017-4-1");// DateTime.ParseExact("2017/04/01", "yyyy/MM/dd", System.Globalization.CultureInfo.InvariantCulture);
+            DateTime dt = Convert.ToDateTime("2016-1-1");// DateTime.ParseExact("2017/04/01", "yyyy/MM/dd", System.Globalization.CultureInfo.InvariantCulture);
             for (int i = 0; i < 400; i++)
             {                
                 dt = dt.AddDays(1);
@@ -309,7 +313,10 @@ namespace cvsTool.Model
             {
             }
 
-            if( Open.Open<Ref.Close*(1+ testParam.k2)) // open position condition check
+            double band = 0.05;
+            double center = Ref.Close * (1 + testParam.k2);
+            // if (((Open.Open- center)> band)|| ((Open.Open - center) < band))) // open position condition check
+            if (Math.Abs(Open.Open - center)>band)
             {  //高开幅度
                 return false;
             }
